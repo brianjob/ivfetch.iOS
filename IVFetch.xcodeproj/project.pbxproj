@@ -1,0 +1,405 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		C7DBD9C81D70B9CB00497B78 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7DBD9C71D70B9CB00497B78 /* AppDelegate.swift */; };
+		C7DBD9CA1D70B9CB00497B78 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7DBD9C91D70B9CB00497B78 /* ViewController.swift */; };
+		C7DBD9CD1D70B9CB00497B78 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C7DBD9CB1D70B9CB00497B78 /* Main.storyboard */; };
+		C7DBD9CF1D70B9CB00497B78 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C7DBD9CE1D70B9CB00497B78 /* Assets.xcassets */; };
+		C7DBD9D21D70B9CB00497B78 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C7DBD9D01D70B9CB00497B78 /* LaunchScreen.storyboard */; };
+		C7DBD9DD1D70B9CB00497B78 /* IVFetchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7DBD9DC1D70B9CB00497B78 /* IVFetchTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C7DBD9D91D70B9CB00497B78 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C7DBD9BC1D70B9CB00497B78 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C7DBD9C31D70B9CB00497B78;
+			remoteInfo = IVFetch;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		C7DBD9C41D70B9CB00497B78 /* IVFetch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IVFetch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C7DBD9C71D70B9CB00497B78 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		C7DBD9C91D70B9CB00497B78 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		C7DBD9CC1D70B9CB00497B78 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		C7DBD9CE1D70B9CB00497B78 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		C7DBD9D11D70B9CB00497B78 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		C7DBD9D31D70B9CB00497B78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C7DBD9D81D70B9CB00497B78 /* IVFetchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IVFetchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C7DBD9DC1D70B9CB00497B78 /* IVFetchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IVFetchTests.swift; sourceTree = "<group>"; };
+		C7DBD9DE1D70B9CB00497B78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C7DBD9C11D70B9CB00497B78 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C7DBD9D51D70B9CB00497B78 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		C7DBD9BB1D70B9CB00497B78 = {
+			isa = PBXGroup;
+			children = (
+				C7DBD9C61D70B9CB00497B78 /* IVFetch */,
+				C7DBD9DB1D70B9CB00497B78 /* IVFetchTests */,
+				C7DBD9C51D70B9CB00497B78 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C7DBD9C51D70B9CB00497B78 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C7DBD9C41D70B9CB00497B78 /* IVFetch.app */,
+				C7DBD9D81D70B9CB00497B78 /* IVFetchTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C7DBD9C61D70B9CB00497B78 /* IVFetch */ = {
+			isa = PBXGroup;
+			children = (
+				C7DBD9C71D70B9CB00497B78 /* AppDelegate.swift */,
+				C7DBD9C91D70B9CB00497B78 /* ViewController.swift */,
+				C7DBD9CB1D70B9CB00497B78 /* Main.storyboard */,
+				C7DBD9CE1D70B9CB00497B78 /* Assets.xcassets */,
+				C7DBD9D01D70B9CB00497B78 /* LaunchScreen.storyboard */,
+				C7DBD9D31D70B9CB00497B78 /* Info.plist */,
+			);
+			path = IVFetch;
+			sourceTree = "<group>";
+		};
+		C7DBD9DB1D70B9CB00497B78 /* IVFetchTests */ = {
+			isa = PBXGroup;
+			children = (
+				C7DBD9DC1D70B9CB00497B78 /* IVFetchTests.swift */,
+				C7DBD9DE1D70B9CB00497B78 /* Info.plist */,
+			);
+			path = IVFetchTests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		C7DBD9C31D70B9CB00497B78 /* IVFetch */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C7DBD9E11D70B9CB00497B78 /* Build configuration list for PBXNativeTarget "IVFetch" */;
+			buildPhases = (
+				C7DBD9C01D70B9CB00497B78 /* Sources */,
+				C7DBD9C11D70B9CB00497B78 /* Frameworks */,
+				C7DBD9C21D70B9CB00497B78 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = IVFetch;
+			productName = IVFetch;
+			productReference = C7DBD9C41D70B9CB00497B78 /* IVFetch.app */;
+			productType = "com.apple.product-type.application";
+		};
+		C7DBD9D71D70B9CB00497B78 /* IVFetchTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C7DBD9E41D70B9CB00497B78 /* Build configuration list for PBXNativeTarget "IVFetchTests" */;
+			buildPhases = (
+				C7DBD9D41D70B9CB00497B78 /* Sources */,
+				C7DBD9D51D70B9CB00497B78 /* Frameworks */,
+				C7DBD9D61D70B9CB00497B78 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C7DBD9DA1D70B9CB00497B78 /* PBXTargetDependency */,
+			);
+			name = IVFetchTests;
+			productName = IVFetchTests;
+			productReference = C7DBD9D81D70B9CB00497B78 /* IVFetchTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C7DBD9BC1D70B9CB00497B78 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0730;
+				LastUpgradeCheck = 0730;
+				ORGANIZATIONNAME = "Brian Barton";
+				TargetAttributes = {
+					C7DBD9C31D70B9CB00497B78 = {
+						CreatedOnToolsVersion = 7.3.1;
+					};
+					C7DBD9D71D70B9CB00497B78 = {
+						CreatedOnToolsVersion = 7.3.1;
+						TestTargetID = C7DBD9C31D70B9CB00497B78;
+					};
+				};
+			};
+			buildConfigurationList = C7DBD9BF1D70B9CB00497B78 /* Build configuration list for PBXProject "IVFetch" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = C7DBD9BB1D70B9CB00497B78;
+			productRefGroup = C7DBD9C51D70B9CB00497B78 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C7DBD9C31D70B9CB00497B78 /* IVFetch */,
+				C7DBD9D71D70B9CB00497B78 /* IVFetchTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		C7DBD9C21D70B9CB00497B78 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C7DBD9D21D70B9CB00497B78 /* LaunchScreen.storyboard in Resources */,
+				C7DBD9CF1D70B9CB00497B78 /* Assets.xcassets in Resources */,
+				C7DBD9CD1D70B9CB00497B78 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C7DBD9D61D70B9CB00497B78 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C7DBD9C01D70B9CB00497B78 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C7DBD9CA1D70B9CB00497B78 /* ViewController.swift in Sources */,
+				C7DBD9C81D70B9CB00497B78 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C7DBD9D41D70B9CB00497B78 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C7DBD9DD1D70B9CB00497B78 /* IVFetchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C7DBD9DA1D70B9CB00497B78 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C7DBD9C31D70B9CB00497B78 /* IVFetch */;
+			targetProxy = C7DBD9D91D70B9CB00497B78 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		C7DBD9CB1D70B9CB00497B78 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C7DBD9CC1D70B9CB00497B78 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		C7DBD9D01D70B9CB00497B78 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C7DBD9D11D70B9CB00497B78 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		C7DBD9DF1D70B9CB00497B78 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C7DBD9E01D70B9CB00497B78 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		C7DBD9E21D70B9CB00497B78 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = IVFetch/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = brianjob.IVFetch;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		C7DBD9E31D70B9CB00497B78 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = IVFetch/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = brianjob.IVFetch;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		C7DBD9E51D70B9CB00497B78 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = IVFetchTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = brianjob.IVFetchTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/IVFetch.app/IVFetch";
+			};
+			name = Debug;
+		};
+		C7DBD9E61D70B9CB00497B78 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = IVFetchTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = brianjob.IVFetchTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/IVFetch.app/IVFetch";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C7DBD9BF1D70B9CB00497B78 /* Build configuration list for PBXProject "IVFetch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C7DBD9DF1D70B9CB00497B78 /* Debug */,
+				C7DBD9E01D70B9CB00497B78 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C7DBD9E11D70B9CB00497B78 /* Build configuration list for PBXNativeTarget "IVFetch" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C7DBD9E21D70B9CB00497B78 /* Debug */,
+				C7DBD9E31D70B9CB00497B78 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		C7DBD9E41D70B9CB00497B78 /* Build configuration list for PBXNativeTarget "IVFetchTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C7DBD9E51D70B9CB00497B78 /* Debug */,
+				C7DBD9E61D70B9CB00497B78 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C7DBD9BC1D70B9CB00497B78 /* Project object */;
+}
