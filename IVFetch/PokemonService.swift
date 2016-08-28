@@ -34,9 +34,12 @@ class PokemonService: PGoAuthDelegate, PGoApiDelegate {
     }
     
     private var getInventoryCallback: ([Pokemon]) -> () = {_ in }
+    private var errorCallback: (String) -> () = {_ in }
     
-    func getInventory(callback: ([Pokemon]) -> ()) {
-        self.getInventoryCallback = callback
+    func getInventory(successCallback: ([Pokemon]) -> (), errorCallback: (String) -> ()) {
+        self.getInventoryCallback = successCallback
+        self.errorCallback = errorCallback
+        
         self.finalIntent = .GetInventory
         
         if (assureAuthServiceLogin()) {
@@ -129,31 +132,35 @@ class PokemonService: PGoAuthDelegate, PGoApiDelegate {
         if (response.subresponses.count > 0) {
             let inventory = response.subresponses[0] as! Pogoprotos.Networking.Responses.GetInventoryResponse
             
-            for pokemon in inventory.inventoryDelta.inventoryItems
-                .filter({ $0.hasInventoryItemData && $0.inventoryItemData.hasPokemonData && !$0.inventoryItemData.pokemonData.isEgg })
-                .map({ $0.inventoryItemData.pokemonData }) {
-                    print("adding pokemon")
-                    pokemons += [Pokemon(
-                        nickname: pokemon.nickname,
-                        species: pokemon.pokemonId.toString(),
-                        pokemonId: Int(pokemon.pokemonId.rawValue),
-                        isFavorite: pokemon.favorite == 1,
-                        height: Double(pokemon.heightM),
-                        weight: Double(pokemon.weightKg),
-                        cp: Int(pokemon.cp),
-                        hp: Int(pokemon.stamina),
-                        maxHp: Int(pokemon.staminaMax),
-                        move1: pokemon.move1,
-                        move2: pokemon.move2,
-                        individualAttack: Int(pokemon.individualAttack),
-                        individualDefense: Int(pokemon.individualDefense),
-                        individualStamina: Int(pokemon.individualStamina),
-                        battlesAttacked: Int(pokemon.battlesAttacked),
-                        battlesDefended: Int(pokemon.hasBattlesDefended),
-                        timeCaught: NSDate(timeIntervalSince1970: Double(pokemon.creationTimeMs) / 1000.0))]
+            if (inventory.hasInventoryDelta) {
+                for pokemon in inventory.inventoryDelta.inventoryItems
+                    .filter({ $0.hasInventoryItemData && $0.inventoryItemData.hasPokemonData && !$0.inventoryItemData.pokemonData.isEgg })
+                    .map({ $0.inventoryItemData.pokemonData }) {
+                        print("adding pokemon")
+                        pokemons += [Pokemon(
+                            nickname: pokemon.nickname,
+                            species: pokemon.pokemonId.toString(),
+                            pokemonId: Int(pokemon.pokemonId.rawValue),
+                            isFavorite: pokemon.favorite == 1,
+                            height: Double(pokemon.heightM),
+                            weight: Double(pokemon.weightKg),
+                            cp: Int(pokemon.cp),
+                            hp: Int(pokemon.stamina),
+                            maxHp: Int(pokemon.staminaMax),
+                            move1: pokemon.move1,
+                            move2: pokemon.move2,
+                            individualAttack: Int(pokemon.individualAttack),
+                            individualDefense: Int(pokemon.individualDefense),
+                            individualStamina: Int(pokemon.individualStamina),
+                            battlesAttacked: Int(pokemon.battlesAttacked),
+                            battlesDefended: Int(pokemon.hasBattlesDefended),
+                            timeCaught: NSDate(timeIntervalSince1970: Double(pokemon.creationTimeMs) / 1000.0))]
+                }
+                
+                getInventoryCallback(pokemons)
+            } else {
+                errorCallback("Could not retrieve inventory")
             }
-            
-            getInventoryCallback(pokemons)
         } else {
             print("get inventory returned empty response")
         }
@@ -181,6 +188,13 @@ struct Pokemon {
     let move1: PGoApi.Pogoprotos.Enums.PokemonMove
     let move2: PGoApi.Pogoprotos.Enums.PokemonMove
     
+    var move1Pretty: String {
+        return formatMove(move1)
+    }
+    var move2Pretty: String {
+        return formatMove(move2)
+    }
+    
     let individualAttack: Int
     let individualDefense: Int
     let individualStamina: Int
@@ -190,11 +204,17 @@ struct Pokemon {
     
     let timeCaught: NSDate
     
-    var iVPct: Double {
-        return Double(individualAttack + individualStamina + individualDefense) / 45
+    var ivPct: Double {
+        return Double(individualAttack + individualStamina + individualDefense) / 45 * 100
     }
     
     var displayName: String {
         return nickname ?? species
+    }
+    
+    private func formatMove(move: Pogoprotos.Enums.PokemonMove) -> String {
+        return move.toString()
+            .lowercaseString.capitalizedString
+            .stringByReplacingOccurrencesOfString("_", withString: " ")
     }
 }

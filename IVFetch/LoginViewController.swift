@@ -18,13 +18,24 @@ class LoginViewController: UIViewController, CLLocationManagerDelegate {
     @IBOutlet weak var authServiceSwitch: UISwitch!
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var messageLabel: UILabel!
+    @IBOutlet weak var locationRetryButton: UIButton!
+    @IBOutlet weak var loginButton: UIBarButtonItem!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        if location == nil {
+            loginButton.enabled = false // can't login without location
+        }
+        
+        // setup location manager
         locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
-        locationManager.requestLocation() // TODO: add spinner to indicate location retrieval in progress
+        locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+        
+        retryGetLocation()
     }
     
     // MARK: - CLLocationManagerDelegate
@@ -32,32 +43,56 @@ class LoginViewController: UIViewController, CLLocationManagerDelegate {
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let firstLocation = locations.first {
             location = firstLocation
+            activityIndicator.stopAnimating()
+            loginButton.enabled = true
         } else {
             print("No location received")
+            notifyOfErrorFindingLocation()
         }
     }
     
     func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
         print("Error finding location: \(error.localizedDescription)")
-        
-        // TODO: add retry button and spinner
+        notifyOfErrorFindingLocation()
+    }
+    
+    func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+        if status == .AuthorizedWhenInUse || status == .AuthorizedAlways {
+            retryGetLocation()
+        }
+    }
+    
+    private func showErrorMessage(message: String) {
+        messageLabel.text = message
+        messageLabel.textColor = UIColor.redColor()
+        messageLabel.numberOfLines = 1
+        messageLabel.adjustsFontSizeToFitWidth = true
+        messageLabel.hidden = false
+    }
+    
+    private func notifyOfErrorFindingLocation() {
+        showErrorMessage("Could not determine location")
+        locationRetryButton.hidden = false
+        activityIndicator.stopAnimating()
     }
 
     // MARK: Actions
 
-    @IBAction func login() {
-        let authService = authServiceSwitch.on ? AuthService.PTC : AuthService.Google
+    // attempts to get location
+    @IBAction func retryGetLocation() {
+        messageLabel.hidden = true
+        locationRetryButton.hidden = true
         
-        if let username = usernameTextField.text, let password = passwordTextField.text, let location = self.location {
-            self.pokemonService = PokemonService(authService: authService, username: username, password: password, location: location)
-            let collectionController = self.storyboard!.instantiateViewControllerWithIdentifier("PokemonCollectionViewController") as! PokemonCollectionViewController
-            let navigationController =
-                self.storyboard!.instantiateViewControllerWithIdentifier("NavigationController") as!
-                    UINavigationController
-            collectionController.pokemonService = self.pokemonService
-            self.pokemonService!.getInventory({(pokemons: [Pokemon]) -> () in
-                self.presentViewController(navigationController, animated: true, completion: nil)
-            })
+        let authorizationStatus = CLLocationManager.authorizationStatus()
+        switch authorizationStatus {
+        case .Denied, .NotDetermined:
+            showErrorMessage("Authorize location services to continue")
+            locationManager.requestWhenInUseAuthorization()
+        case .AuthorizedAlways, .AuthorizedWhenInUse:
+            activityIndicator.startAnimating()
+            locationManager.requestLocation()
+        case .Restricted:
+            showErrorMessage("Your device does not allow location services")
         }
     }
     
@@ -78,6 +113,8 @@ class LoginViewController: UIViewController, CLLocationManagerDelegate {
                 destinationViewController.pokemonService = pokemonService
                 self.pokemonService!.getInventory({(pokemons: [Pokemon]) -> () in
                     destinationViewController.pokemons = pokemons
+                    }, errorCallback: { (errorMessage: String) -> () in
+                       destinationViewController.errorMessage = errorMessage
                 })
             }
         }
