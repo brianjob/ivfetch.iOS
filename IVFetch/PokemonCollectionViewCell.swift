@@ -8,7 +8,7 @@
 
 import UIKit
 
-@IBDesignable class PokemonCollectionViewCell: UICollectionViewCell {
+class PokemonCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var cpLabel: UILabel!
     @IBOutlet weak var ivLabel: UILabel!

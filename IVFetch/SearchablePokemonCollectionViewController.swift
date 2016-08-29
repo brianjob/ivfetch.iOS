@@ -11,6 +11,7 @@ import UIKit
 class SearchablePokemonCollectionViewController: UIViewController, UISearchControllerDelegate, UISearchResultsUpdating, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout
 {
     let REUSE_IDENTIFIER = "PokemonCell"
+    let COLLECTION_VIEW_PADDING = CGFloat(10)
     
     var pokemonService: PokemonService? = nil
     var errorMessage: String? = nil
@@ -29,8 +30,11 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
     
     @IBOutlet var searchBarContainer: UIView!
     @IBOutlet var collectionView: UICollectionView!
+    @IBOutlet weak var toolbar: UIToolbar!
     
     var searchController: UISearchController?
+    
+    var sortAscending = true
     
     //MARK: Setup & Teardown
     
@@ -39,10 +43,10 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
         super.viewDidLoad()
         print("collection view did load")
         
-        collectionView?.backgroundColor = UIColor.whiteColor()
+        collectionView?.backgroundColor = UIColor.darkGrayColor()
         
         //load the data
-        pokemons = loadSampleData()
+        //pokemons = loadSampleData()
         
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -61,6 +65,15 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
             
             return searchController
         })()
+        
+        // setup the toolbar
+        setupToolbar()
+        
+        // setup collection view
+        collectionView!.contentInset = UIEdgeInsets(top: COLLECTION_VIEW_PADDING,
+                                                    left: COLLECTION_VIEW_PADDING,
+                                                    bottom: COLLECTION_VIEW_PADDING,
+                                                    right: COLLECTION_VIEW_PADDING)
     }
     
     //MARK: Private
@@ -114,6 +127,53 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
         }
     }
     
+    private func setupToolbar() {
+        let fixedSpace = UIBarButtonItem(barButtonSystemItem: .FixedSpace, target: nil, action: nil)
+        fixedSpace.width = 5
+        
+        toolbar?.items = [
+            UIBarButtonItem(barButtonSystemItem: .FlexibleSpace , target: nil, action: nil),
+            UIBarButtonItem(title: "🕐", style: .Plain, target: self, action: #selector(sortRecent)),
+            fixedSpace,
+            UIBarButtonItem(title: "Name", style: .Plain, target: self, action: #selector(sortName)),
+            fixedSpace,
+            UIBarButtonItem(title: "#", style: .Plain, target: self, action: #selector(sortSpecies)),
+            fixedSpace,
+            UIBarButtonItem(title: "CP", style: .Plain, target: self, action: #selector(sortCp)),
+            fixedSpace,
+            UIBarButtonItem(title: "IV", style: .Plain, target: self, action: #selector(sortIv)),
+            fixedSpace
+        ]
+    }
+
+    @objc private func sortRecent() {
+        filteredPokemons.sortInPlace({ applySortOrder($0.timeCaught < $1.timeCaught) })
+        toggleSortOrder()
+    }
+    @objc private func sortName() {
+        filteredPokemons.sortInPlace({ applySortOrder($0.displayName.lowercaseString < $1.displayName.lowercaseString) })
+        toggleSortOrder()
+    }
+    @objc private func sortSpecies() {
+        filteredPokemons.sortInPlace({ applySortOrder($0.pokemonId < $1.pokemonId) })
+        toggleSortOrder()
+    }
+    @objc private func sortCp() {
+        filteredPokemons.sortInPlace({ applySortOrder($0.cp < $1.cp )})
+        toggleSortOrder()
+    }
+    @objc private func sortIv() {
+        filteredPokemons.sortInPlace({ applySortOrder($0.ivPct < $1.ivPct) })
+        toggleSortOrder()
+    }
+    
+    private func toggleSortOrder() {
+        sortAscending = !sortAscending
+    }
+    private func applySortOrder(condition: Bool) -> Bool {
+        return sortAscending ? condition : !condition
+    }
+    
     //MARK:UISearchResultsUpdating
     
     func updateSearchResultsForSearchController(searchController: UISearchController) {
@@ -139,21 +199,19 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
         cell.nameLabel.minimumScaleFactor = 0.4
         cell.nameLabel.adjustsFontSizeToFitWidth = true
         cell.nameLabel.text = pokemon.displayName
-        cell.nameLabel.textColor = UIColor.blueColor()
         
         cell.ivLabel.numberOfLines = 1
         cell.ivLabel.minimumScaleFactor = 0.4
         cell.ivLabel.adjustsFontSizeToFitWidth = true
         cell.ivLabel.text = String(format: "%%%.2f", pokemon.ivPct)
-        cell.ivLabel.textColor = UIColor.blueColor()
         
         cell.cpLabel.numberOfLines = 1
         cell.ivLabel.minimumScaleFactor = 0.4
         cell.cpLabel.adjustsFontSizeToFitWidth = true
         cell.cpLabel.text = "\(pokemon.cp) CP"
-        cell.cpLabel.textColor = UIColor.blueColor()
         
-        cell.backgroundColor = UIColor.grayColor()
+        cell.layer.cornerRadius = 6
+        
         return cell
     }
     
@@ -171,9 +229,17 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
             
             if let selectedPokemonCell = sender as? PokemonCollectionViewCell {
                 let indexPath = collectionView!.indexPathForCell(selectedPokemonCell)!
-                let selectedPokemon = pokemons[indexPath.row]
+                let selectedPokemon = filteredPokemons[indexPath.row]
                 pokemonDetailViewController.pokemon = selectedPokemon
             }
+        } else if let loginController = segue.destinationViewController as? LoginViewController {
+            loginController.logout()
+        }
+        
+        // hide the keyboard
+        if ((searchController?.searchBar.isFirstResponder()) != nil) {
+            searchController?.searchBar.resignFirstResponder()
+            searchController?.active = false
         }
     }
 

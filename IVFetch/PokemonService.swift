@@ -96,7 +96,8 @@ class PokemonService: PGoAuthDelegate, PGoApiDelegate {
     
     // callback function when auth service login not successful
     func didNotReceiveAuth() {
-        print("authorization failed")
+        errorCallback("Authentication failed")
+        print("authentication failed")
     }
     
     // MARK: PgoApiDelegate
@@ -121,6 +122,7 @@ class PokemonService: PGoAuthDelegate, PGoApiDelegate {
     }
     
     func didReceiveApiError(intent: PGoApiIntent, statusCode: Int?) {
+        errorCallback("An API error occured")
         print("API Error: \(statusCode)")
     }
     
@@ -136,7 +138,6 @@ class PokemonService: PGoAuthDelegate, PGoApiDelegate {
                 for pokemon in inventory.inventoryDelta.inventoryItems
                     .filter({ $0.hasInventoryItemData && $0.inventoryItemData.hasPokemonData && !$0.inventoryItemData.pokemonData.isEgg })
                     .map({ $0.inventoryItemData.pokemonData }) {
-                        print("adding pokemon")
                         pokemons += [Pokemon(
                             nickname: pokemon.nickname,
                             species: pokemon.pokemonId.toString(),
@@ -160,8 +161,10 @@ class PokemonService: PGoAuthDelegate, PGoApiDelegate {
                 getInventoryCallback(pokemons)
             } else {
                 errorCallback("Could not retrieve inventory")
+                print("no inventory delta")
             }
         } else {
+            errorCallback("Could not retrieve inventory")
             print("get inventory returned empty response")
         }
     }
@@ -209,7 +212,12 @@ struct Pokemon {
     }
     
     var displayName: String {
-        return nickname ?? species
+        return nickname == nil || (nickname?.isEmpty)! ?
+            species.lowercaseString
+                .stringByReplacingOccurrencesOfString("_male", withString: " ♂")
+                .stringByReplacingOccurrencesOfString("_female", withString: " ♀")
+                .capitalizedString :
+            nickname!
     }
     
     private func formatMove(move: Pogoprotos.Enums.PokemonMove) -> String {

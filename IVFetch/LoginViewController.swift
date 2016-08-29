@@ -10,25 +10,27 @@ import UIKit
 import CoreLocation
 
 class LoginViewController: UIViewController, CLLocationManagerDelegate {
+    let COLLECTION_CONTROLLER_ID = "YourPokemonController"
+    
     let locationManager = CLLocationManager()
     var location: CLLocation?
     var pokemonService: PokemonService?
     
     // MARK: Outlets
-    @IBOutlet weak var authServiceSwitch: UISwitch!
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var locationRetryButton: UIButton!
-    @IBOutlet weak var loginButton: UIBarButtonItem!
-    
+    @IBOutlet weak var googleLoginButton: UIButton!
+    @IBOutlet weak var ptcLoginButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         if location == nil {
-            loginButton.enabled = false // can't login without location
+            googleLoginButton.enabled = false // can't login without location
+            ptcLoginButton.enabled = false
         }
         
         // setup location manager
@@ -43,8 +45,10 @@ class LoginViewController: UIViewController, CLLocationManagerDelegate {
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let firstLocation = locations.first {
             location = firstLocation
+            print("location received: \(firstLocation.coordinate)")
             activityIndicator.stopAnimating()
-            loginButton.enabled = true
+            googleLoginButton.enabled = true
+            ptcLoginButton.enabled = true
         } else {
             print("No location received")
             notifyOfErrorFindingLocation()
@@ -96,28 +100,44 @@ class LoginViewController: UIViewController, CLLocationManagerDelegate {
         }
     }
     
-    // logs the user out
-    @IBAction func logout(sender: UIStoryboardSegue) {
-        pokemonService?.logout()
+    @IBAction func googleLogin() {
+        login(AuthService.Google)
+    }
+
+    @IBAction func ptcLogin() {
+        login(AuthService.PTC)
+    }
+
+    
+    private func login(authService: AuthService) {
+        if let username = usernameTextField.text, let password = passwordTextField.text, let location = self.location {
+            
+            activityIndicator.startAnimating()
+            
+            self.pokemonService = PokemonService(authService: authService, username: username, password: password, location: location)
+            
+            self.pokemonService!.getInventory({
+                (pokemons: [Pokemon]) -> () in
+                if let navigationController = self.storyboard?.instantiateViewControllerWithIdentifier(self.COLLECTION_CONTROLLER_ID)
+                    as? UINavigationController {
+                    if let collectionController = navigationController.topViewController as? SearchablePokemonCollectionViewController {
+                        collectionController.pokemons = pokemons
+                        collectionController.pokemonService = self.pokemonService
+                        self.activityIndicator.stopAnimating()
+                        self.presentViewController(navigationController, animated: true, completion: nil)
+                    }
+                }
+                }, errorCallback: { (errorMessage: String) -> () in
+                    self.activityIndicator.stopAnimating()
+                    self.showErrorMessage(errorMessage)
+                }
+            )
+        }
     }
     
-    // MARK: Navigation
-    
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        print("LoginViewController prepare for segue")
-        let authService = authServiceSwitch.on ? AuthService.PTC : AuthService.Google
-        
-        if let username = usernameTextField.text, let password = passwordTextField.text, let location = self.location {
-            self.pokemonService = PokemonService(authService: authService, username: username, password: password, location: location)
-            if let destinationViewController = segue.destinationViewController as? PokemonCollectionViewController {
-                destinationViewController.pokemonService = pokemonService
-                self.pokemonService!.getInventory({(pokemons: [Pokemon]) -> () in
-                    destinationViewController.pokemons = pokemons
-                    }, errorCallback: { (errorMessage: String) -> () in
-                       destinationViewController.errorMessage = errorMessage
-                })
-            }
-        }
+    // logs the user out
+    func logout() {
+        pokemonService?.logout()
     }
 }
 
