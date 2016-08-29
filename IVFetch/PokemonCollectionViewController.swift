@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PokemonCollectionViewController : UICollectionViewController {
+class PokemonCollectionViewController : UICollectionViewController, UISearchBarDelegate {
     let REUSE_IDENTIFIER = "PokemonCell"
     
     var pokemonService: PokemonService? = nil
@@ -22,7 +22,6 @@ class PokemonCollectionViewController : UICollectionViewController {
     override func viewDidLoad() {
         print("view loaded")
         collectionView?.backgroundColor = UIColor.whiteColor()
-        //pokemons = loadSampleData()
     }
     
     func loadSampleData() -> [Pokemon] {

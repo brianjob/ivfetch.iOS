@@ -18,7 +18,7 @@ class PokemonDetailViewController: UITableViewController {
     private var pokemonTable: PokemonTable?
     
     override func viewDidLoad() {
-        
+
     }
     
     private func updatePokemonTable() {
