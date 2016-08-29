@@ -18,7 +18,7 @@ class PokemonDetailViewController: UITableViewController {
     private var pokemonTable: PokemonTable?
     
     override func viewDidLoad() {
-
+        tableView.allowsSelection = false
     }
     
     private func updatePokemonTable() {
@@ -29,7 +29,7 @@ class PokemonDetailViewController: UITableViewController {
             pokemonTable = PokemonTable(sections: [
                 PokemonTableSection(name: "Bio", order: 1, cells: [
                     PokemonTableCell(label: "Nickname", value: pokemon.nickname ?? ""),
-                    PokemonTableCell(label: "Species", value: "\(pokemon.species) [\(pokemon.pokemonId)]"),
+                    PokemonTableCell(label: "Species", value: "\(pokemon.speciesPretty) [\(pokemon.pokemonId)]"),
                     PokemonTableCell(label: "Favorite", value: pokemon.isFavorite ? "Yes" : "No"),
                     PokemonTableCell(label: "Height", value: "\(String(format: "%.2f", pokemon.height)) m"),
                     PokemonTableCell(label: "Weight", value: "\(String(format: "%.2f", pokemon.weight)) kg")
@@ -43,8 +43,13 @@ class PokemonDetailViewController: UITableViewController {
                     ]),
                 
                 PokemonTableSection(name: "Moves", order: 3, cells: [
-                    PokemonTableCell(label: "Quick Move", value: pokemon.move1Pretty),
-                    PokemonTableCell(label: "Special Move", value: pokemon.move2Pretty)
+                    PokemonTableCell(label: "Quick Move", value: pokemon.moveSet.fastMoveName),
+                    PokemonTableCell(label: "Special Move", value: pokemon.moveSet.specialMoveName),
+                    PokemonTableCell(label: "Useless Special?", value: pokemon.moveSet.isSpecialMoveUseless ? "Yes" : "No"),
+                    PokemonTableCell(label: "Offensive TDO", value: String(pokemon.moveSet.offensiveTDO)),
+                    PokemonTableCell(label: "Off. Efficiency", value: pokemon.moveSet.offensivePctOfTopMoveSet),
+                    PokemonTableCell(label: "Defensive TDO", value: String(pokemon.moveSet.defensiveTDO)),
+                    PokemonTableCell(label: "Def. Efficiency", value: pokemon.moveSet.defensivePctOfTopMoveSet),
                     ]),
                 
                 PokemonTableSection(name: "History", order: 4, cells: [

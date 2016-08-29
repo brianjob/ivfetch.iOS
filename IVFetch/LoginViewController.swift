@@ -9,7 +9,7 @@
 import UIKit
 import CoreLocation
 
-class LoginViewController: UIViewController, CLLocationManagerDelegate {
+class LoginViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDelegate {
     let COLLECTION_CONTROLLER_ID = "YourPokemonController"
     
     let locationManager = CLLocationManager()
@@ -33,14 +33,26 @@ class LoginViewController: UIViewController, CLLocationManagerDelegate {
             ptcLoginButton.enabled = false
         }
         
+        usernameTextField.delegate = self
+        passwordTextField.delegate = self
+        
         // setup location manager
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
-        
         retryGetLocation()
     }
     
-    // MARK: - CLLocationManagerDelegate
+    // MARK: UITextFieldDelegate
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        if textField == usernameTextField {
+            passwordTextField.becomeFirstResponder()
+        } else {
+            textField.resignFirstResponder()
+        }
+        return true
+    }
+    
+    // MARK: CLLocationManagerDelegate
     
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let firstLocation = locations.first {
@@ -110,6 +122,12 @@ class LoginViewController: UIViewController, CLLocationManagerDelegate {
 
     
     private func login(authService: AuthService) {
+        if passwordTextField.isFirstResponder() {
+            passwordTextField.resignFirstResponder()
+        } else if usernameTextField.isFirstResponder() {
+            usernameTextField.resignFirstResponder()
+        }
+        
         if let username = usernameTextField.text, let password = passwordTextField.text, let location = self.location {
             
             activityIndicator.startAnimating()
