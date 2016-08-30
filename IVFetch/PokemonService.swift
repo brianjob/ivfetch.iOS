@@ -176,13 +176,30 @@ class PokemonService: PGoAuthDelegate, PGoApiDelegate {
         }
     }
     
-    private func lookupMoveSet(pokemonId: Int, move1: PGoApi.Pogoprotos.Enums.PokemonMove,
-                                               move2: PGoApi.Pogoprotos.Enums.PokemonMove) -> MoveSet {
-        return moveSets.filter(
+    // returns nil if no moveset found
+    private func lookupMoveSet(pokemonId: Int,
+                               move1: PGoApi.Pogoprotos.Enums.PokemonMove,
+                               move2: PGoApi.Pogoprotos.Enums.PokemonMove) -> MoveSet {
+        var results = moveSets.filter(
             { $0.pokemonId == pokemonId &&
               $0.fastMoveName == moveToString(move1) &&
               $0.specialMoveName == moveToString(move2)
-            })[0]
+            })
+        
+        if results.count != 1 {
+            print("unexptected result: [\(pokemonId)] \(move1.toString()), \(move2.toString())")
+            return MoveSet(moveSetId: nil,
+                           pokemonId: pokemonId,
+                           fastMoveName: moveToString(move1),
+                           specialMoveName: moveToString(move2),
+                           isSpecialMoveUseless: nil,
+                           offensivePctOfTopMoveSet: nil,
+                           defensivePctOfTopMoveSet: nil,
+                           offensiveTDO: nil,
+                           defensiveTDO: nil)
+        }
+        
+        return results[0]
     }
     
     private func moveToString(move: PGoApi.Pogoprotos.Enums.PokemonMove) -> String {
@@ -203,7 +220,6 @@ class PokemonService: PGoAuthDelegate, PGoApiDelegate {
             moveSetArray.append(MoveSet(
                 moveSetId: Int(moveSetRow[0])!,
                 pokemonId: Int(moveSetRow[1])!,
-                pokemonName: moveSetRow[2],
                 fastMoveName: moveSetRow[3],
                 specialMoveName: moveSetRow[4],
                 isSpecialMoveUseless: moveSetRow[5] != "",
@@ -268,14 +284,13 @@ struct Pokemon {
 }
 
 struct MoveSet {
-    let moveSetId: Int
+    let moveSetId: Int?
     let pokemonId: Int
-    let pokemonName: String
     let fastMoveName: String
     let specialMoveName: String
-    let isSpecialMoveUseless: Bool
-    let offensivePctOfTopMoveSet: String
-    let defensivePctOfTopMoveSet: String
-    let offensiveTDO: Int
-    let defensiveTDO: Int
+    let isSpecialMoveUseless: Bool?
+    let offensivePctOfTopMoveSet: String?
+    let defensivePctOfTopMoveSet: String?
+    let offensiveTDO: Int?
+    let defensiveTDO: Int?
 }

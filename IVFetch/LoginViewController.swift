@@ -32,6 +32,9 @@ class LoginViewController: UIViewController, CLLocationManagerDelegate, UITextFi
             googleLoginButton.enabled = false // can't login without location
             ptcLoginButton.enabled = false
         }
+
+        googleLoginButton.layer.cornerRadius = 6
+        ptcLoginButton.layer.cornerRadius = 6
         
         usernameTextField.delegate = self
         passwordTextField.delegate = self

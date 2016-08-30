@@ -45,11 +45,19 @@ class PokemonDetailViewController: UITableViewController {
                 PokemonTableSection(name: "Moves", order: 3, cells: [
                     PokemonTableCell(label: "Quick Move", value: pokemon.moveSet.fastMoveName),
                     PokemonTableCell(label: "Special Move", value: pokemon.moveSet.specialMoveName),
-                    PokemonTableCell(label: "Useless Special?", value: pokemon.moveSet.isSpecialMoveUseless ? "Yes" : "No"),
-                    PokemonTableCell(label: "Offensive TDO", value: String(pokemon.moveSet.offensiveTDO)),
-                    PokemonTableCell(label: "Off. Efficiency", value: pokemon.moveSet.offensivePctOfTopMoveSet),
-                    PokemonTableCell(label: "Defensive TDO", value: String(pokemon.moveSet.defensiveTDO)),
-                    PokemonTableCell(label: "Def. Efficiency", value: pokemon.moveSet.defensivePctOfTopMoveSet),
+                    PokemonTableCell(label: "Useless Special?", value:
+                        {
+                            if pokemon.moveSet.isSpecialMoveUseless == nil  {
+                                return "N/A"
+                            } else {
+                                return pokemon.moveSet.isSpecialMoveUseless! ? "Yes" : "No"
+                            }
+                        }()
+                    ),
+                    PokemonTableCell(label: "Offensive TDO", value: optionalInt2String(pokemon.moveSet.offensiveTDO)),
+                    PokemonTableCell(label: "Off. Efficiency", value: pokemon.moveSet.offensivePctOfTopMoveSet ?? ""),
+                    PokemonTableCell(label: "Defensive TDO", value: optionalInt2String(pokemon.moveSet.defensiveTDO)),
+                    PokemonTableCell(label: "Def. Efficiency", value: pokemon.moveSet.defensivePctOfTopMoveSet ?? ""),
                     ]),
                 
                 PokemonTableSection(name: "History", order: 4, cells: [
@@ -59,6 +67,10 @@ class PokemonDetailViewController: UITableViewController {
                     ])
                 ])
         }
+    }
+    
+    private func optionalInt2String(value: Int?) -> String {
+        return value == nil ? "" : String(value!)
     }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {

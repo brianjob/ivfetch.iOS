@@ -137,7 +137,9 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
             UIBarButtonItem(barButtonSystemItem: .FlexibleSpace , target: nil, action: nil),
             recentButton,
             fixedSpace,
-            makeBarButtonItem("Name", action: #selector(sortName)),
+            makeBarButtonItem("Off.", action: #selector(sortOffTdo)),
+            fixedSpace,
+            makeBarButtonItem("Def.", action: #selector(sortDefTdo)),
             fixedSpace,
             makeBarButtonItem("#", action: #selector(sortSpecies)),
             fixedSpace,
@@ -175,6 +177,14 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
     }
     @objc private func sortIv() {
         filteredPokemons.sortInPlace({ applySortOrder($0.ivPct < $1.ivPct) })
+        toggleSortOrder()
+    }
+    @objc private func sortOffTdo() {
+        filteredPokemons.sortInPlace({ applySortOrder(($0.moveSet.offensiveTDO ?? 0) < ($1.moveSet.offensiveTDO ?? 0)) })
+        toggleSortOrder()
+    }
+    @objc private func sortDefTdo() {
+        filteredPokemons.sortInPlace({ applySortOrder(($0.moveSet.defensiveTDO ?? 0) < ($1.moveSet.defensiveTDO ?? 0)) })
         toggleSortOrder()
     }
     
