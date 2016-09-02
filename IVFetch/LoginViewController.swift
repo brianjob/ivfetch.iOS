@@ -10,11 +10,25 @@ import UIKit
 import CoreLocation
 
 class LoginViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDelegate {
+
+    
     let COLLECTION_CONTROLLER_ID = "YourPokemonController"
+    let PTC_LOGIN_BUTTON_TEXT = "Login with PTC"
+    let PTC_USERNAME_PLACEHOLDER = "ptc username"
+    let PTC_PASSWORD_PLACEHOLDER = "password"
+    let PTC_SWITCH_AUTH_BUTTON_TEXT = "Switch to Google"
+    let GOOGLE_LOGIN_BUTTON_TEXT = "Login with Google"
+    let GOOGLE_LOGIN_BUTTON_COLOR = UIColor(colorLiteralRed: 0, green: 128/255.0, blue: 1, alpha: 1)
+    let GOOGLE_PASSWORD_PLACEHOLDER = "paste login code here"
+    let GOOGLE_SWITCH_AUTH_BUTTON_TEXT = "Switch to PTC"
     
     let locationManager = CLLocationManager()
+    
+    var originalLoginButtonColor: UIColor? = nil
+    
     var location: CLLocation?
     var pokemonService: PokemonService?
+    var useGoogleAuth = false
     
     // MARK: Outlets
     @IBOutlet weak var usernameTextField: UITextField!
@@ -22,28 +36,32 @@ class LoginViewController: UIViewController, CLLocationManagerDelegate, UITextFi
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var locationRetryButton: UIButton!
-    @IBOutlet weak var googleLoginButton: UIButton!
-    @IBOutlet weak var ptcLoginButton: UIButton!
+    @IBOutlet weak var loginButton: UIButton!
+    @IBOutlet weak var switchAuthButton: UIButton!
     
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
         if location == nil {
-            googleLoginButton.enabled = false // can't login without location
-            ptcLoginButton.enabled = false
+            loginButton.enabled = false // can't login without location
         }
-
-        googleLoginButton.layer.cornerRadius = 6
-        ptcLoginButton.layer.cornerRadius = 6
+        
+        originalLoginButtonColor = loginButton.backgroundColor
+        loginButton.layer.cornerRadius = 6
+        passwordTextField.secureTextEntry = true
         
         usernameTextField.delegate = self
         passwordTextField.delegate = self
         
+        setupPtcLogin()
+        
         // setup location manager
         locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
         retryGetLocation()
     }
+
     
     // MARK: UITextFieldDelegate
     func textFieldShouldReturn(textField: UITextField) -> Bool {
@@ -62,8 +80,7 @@ class LoginViewController: UIViewController, CLLocationManagerDelegate, UITextFi
             location = firstLocation
             print("location received: \(firstLocation.coordinate)")
             activityIndicator.stopAnimating()
-            googleLoginButton.enabled = true
-            ptcLoginButton.enabled = true
+            loginButton.enabled = true
         } else {
             print("No location received")
             notifyOfErrorFindingLocation()
@@ -97,6 +114,42 @@ class LoginViewController: UIViewController, CLLocationManagerDelegate, UITextFi
 
     // MARK: Actions
 
+    // toggles auth service between google and ptc
+    @IBAction func switchAuthService(sender: UIButton) {
+        useGoogleAuth = !useGoogleAuth
+        passwordTextField.text = ""
+        
+        if (useGoogleAuth) {
+            setupGoogleLogin()
+        } else {
+            setupPtcLogin()
+        }
+    }
+    
+    private func openAuthPage() {
+        UIApplication.sharedApplication().openURL(NSURL(string: GoogleSignInAuth.LOGIN_URL)!)
+    }
+    
+    private func setupGoogleLogin() {
+        usernameTextField.hidden = true
+        passwordTextField.placeholder = GOOGLE_PASSWORD_PLACEHOLDER
+        passwordTextField.secureTextEntry = false
+        loginButton.setTitle(GOOGLE_LOGIN_BUTTON_TEXT, forState: .Normal)
+        loginButton.backgroundColor = GOOGLE_LOGIN_BUTTON_COLOR
+        switchAuthButton.setTitle(GOOGLE_SWITCH_AUTH_BUTTON_TEXT, forState: .Normal)
+        openAuthPage()
+    }
+    
+    private func setupPtcLogin() {
+        usernameTextField.hidden = false
+        passwordTextField.placeholder = PTC_PASSWORD_PLACEHOLDER
+        usernameTextField.placeholder = PTC_USERNAME_PLACEHOLDER
+        passwordTextField.secureTextEntry = true
+        loginButton.setTitle(PTC_LOGIN_BUTTON_TEXT, forState: .Normal)
+        loginButton.backgroundColor = originalLoginButtonColor
+        switchAuthButton.setTitle(PTC_SWITCH_AUTH_BUTTON_TEXT, forState: .Normal)
+    }
+    
     // attempts to get location
     @IBAction func retryGetLocation() {
         messageLabel.hidden = true
@@ -115,14 +168,13 @@ class LoginViewController: UIViewController, CLLocationManagerDelegate, UITextFi
         }
     }
     
-    @IBAction func googleLogin() {
-        login(AuthService.Google)
+    @IBAction func loginButtonPressed() {
+        if (useGoogleAuth) {
+            login(AuthService.Google)
+        } else {
+            login(AuthService.PTC)
+        }
     }
-
-    @IBAction func ptcLogin() {
-        login(AuthService.PTC)
-    }
-
     
     private func login(authService: AuthService) {
         if passwordTextField.isFirstResponder() {

@@ -33,19 +33,27 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
     
     // MARK: Outlets
     
-    @IBOutlet var searchBarContainer: UIView!
-    @IBOutlet var collectionView: UICollectionView!
+    @IBOutlet weak var searchBarContainer: UIView!
+    @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var toolbar: UIToolbar!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     var searchController: UISearchController?
-    
-    var sortAscending = true
     
     // MARK: Actions
     
     @IBAction func refreshData(sender: UIBarButtonItem) {
-        pokemonService?.getInventory({ self.pokemons = $0; print("data refreshed")},
-                                     errorCallback: {_ in print("error refreshing data")})
+        pokemons.removeAll()
+        activityIndicator.startAnimating()
+        pokemonService?.getInventory({
+            self.activityIndicator.stopAnimating()
+            self.pokemons = $0
+            print("data refreshed")
+            },
+            errorCallback: {_ in
+                self.activityIndicator.stopAnimating()
+                print("error refreshing data")
+        })
     }
     
     
@@ -55,9 +63,6 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
     {
         super.viewDidLoad()
         print("collection view did load")
-        
-        //load the data
-        //pokemons = loadSampleData()
         
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -86,6 +91,8 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
                                                     bottom: COLLECTION_VIEW_PADDING
                                                         + CGFloat(toolbar?.frame.height ?? 0),
                                                     right: COLLECTION_VIEW_PADDING)
+
+        activityIndicator.hidesWhenStopped = true
     }
     
     //MARK: Private
@@ -159,40 +166,51 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
         return buttonItem
     }
 
+    private var recentSortAscending = false
     @objc private func sortRecent() {
-        filteredPokemons.sortInPlace({ applySortOrder($0.timeCaught < $1.timeCaught) })
-        toggleSortOrder()
+        filteredPokemons.sortInPlace({ applySortOrder($0.timeCaught < $1.timeCaught, sortAscending: recentSortAscending) })
+        recentSortAscending = !recentSortAscending
     }
+    private var nameSortAscending = false
     @objc private func sortName() {
-        filteredPokemons.sortInPlace({ applySortOrder($0.displayName.lowercaseString < $1.displayName.lowercaseString) })
-        toggleSortOrder()
+        filteredPokemons.sortInPlace({ applySortOrder($0.displayName.lowercaseString < $1.displayName.lowercaseString, sortAscending: nameSortAscending) })
+        nameSortAscending = !nameSortAscending
     }
+    private var speciesSortAscending = false
     @objc private func sortSpecies() {
-        filteredPokemons.sortInPlace({ applySortOrder($0.pokemonId < $1.pokemonId) })
-        toggleSortOrder()
+        filteredPokemons.sortInPlace({ applySortOrder($0.pokemonId < $1.pokemonId, sortAscending: speciesSortAscending) })
+        speciesSortAscending = !speciesSortAscending
     }
+    private var cpSortAscending = false
     @objc private func sortCp() {
-        filteredPokemons.sortInPlace({ applySortOrder($0.cp < $1.cp )})
-        toggleSortOrder()
+        filteredPokemons.sortInPlace({ applySortOrder($0.cp < $1.cp, sortAscending: cpSortAscending)})
+        cpSortAscending = !cpSortAscending
     }
+    private var ivSortAscending = false
     @objc private func sortIv() {
-        filteredPokemons.sortInPlace({ applySortOrder($0.ivPct < $1.ivPct) })
-        toggleSortOrder()
+        filteredPokemons.sortInPlace({ applySortOrder($0.ivPct < $1.ivPct, sortAscending: ivSortAscending) })
+        ivSortAscending = !ivSortAscending
     }
+    private var offTdoSortAscending = false
     @objc private func sortOffTdo() {
-        filteredPokemons.sortInPlace({ applySortOrder(($0.moveSet.offensiveTDO ?? 0) < ($1.moveSet.offensiveTDO ?? 0)) })
-        toggleSortOrder()
+        filteredPokemons.sortInPlace({ applySortOrder(($0.moveSet.offensiveTDO ?? 0) < ($1.moveSet.offensiveTDO ?? 0), sortAscending: offTdoSortAscending) })
+        offTdoSortAscending = !offTdoSortAscending
     }
+    private var defTdoSortAscending = false
     @objc private func sortDefTdo() {
-        filteredPokemons.sortInPlace({ applySortOrder(($0.moveSet.defensiveTDO ?? 0) < ($1.moveSet.defensiveTDO ?? 0)) })
-        toggleSortOrder()
+        filteredPokemons.sortInPlace({ applySortOrder(($0.moveSet.defensiveTDO ?? 0) < ($1.moveSet.defensiveTDO ?? 0), sortAscending: defTdoSortAscending) })
+        defTdoSortAscending = !defTdoSortAscending
     }
     
-    private func toggleSortOrder() {
-        sortAscending = !sortAscending
-    }
-    private func applySortOrder(condition: Bool) -> Bool {
+    private func applySortOrder(condition: Bool, sortAscending: Bool) -> Bool {
         return sortAscending ? condition : !condition
+    }
+    
+    // sets common attributes for labels within collection cell
+    private func setupCellLabel(label: UILabel) {
+        label.numberOfLines = 1
+        label.minimumScaleFactor = 0.4
+        label.adjustsFontSizeToFitWidth = true
     }
     
     //MARK:UISearchResultsUpdating
@@ -216,20 +234,14 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
 
         let pokemon = filteredPokemons[indexPath.row]
         
-        cell.nameLabel.numberOfLines = 1
-        cell.nameLabel.minimumScaleFactor = 0.4
-        cell.nameLabel.adjustsFontSizeToFitWidth = true
+        setupCellLabel(cell.nameLabel)
+        setupCellLabel(cell.ivLabel)
+        setupCellLabel(cell.cpLabel)
+        setupCellLabel(cell.tdoLabel)
         cell.nameLabel.text = pokemon.displayName
-        
-        cell.ivLabel.numberOfLines = 1
-        cell.ivLabel.minimumScaleFactor = 0.4
-        cell.ivLabel.adjustsFontSizeToFitWidth = true
         cell.ivLabel.text = String(format: "%.1f%%", pokemon.ivPct)
-        
-        cell.cpLabel.numberOfLines = 1
-        cell.ivLabel.minimumScaleFactor = 0.4
-        cell.cpLabel.adjustsFontSizeToFitWidth = true
         cell.cpLabel.text = "\(pokemon.cp) CP"
+        cell.tdoLabel.text = ("\(pokemon.moveSet.offensiveTDO ?? 0)/\(pokemon.moveSet.defensiveTDO ?? 0) TDO")
         
         cell.layer.cornerRadius = 6
         

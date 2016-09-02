@@ -12,4 +12,5 @@ class PokemonCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var cpLabel: UILabel!
     @IBOutlet weak var ivLabel: UILabel!
+    @IBOutlet weak var tdoLabel: UILabel!
 }

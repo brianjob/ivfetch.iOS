@@ -19,6 +19,8 @@ class PokemonService: PGoAuthDelegate, PGoApiDelegate {
     let AUTH_ERROR_MESSAGE = "Authentication Failed"
     let GET_INVENTORY_ERROR = "Could Not Retrieve Inventory"
     
+    private let GOOGLE_LOGIN_URL = "https://accounts.google.com/o/oauth2/auth?client_id=848232511240-7so421jotr2609rmqakceuu1luuq0ptb.apps.googleusercontent.com&redirect_uri=urn%3Aietf%3Awg%3Aoauth%3A2.0%3Aoob&response_type=code&scope=openid%20email%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email"
+    
     // MARK: Properties
 
     private var request = PGoApiRequest()
@@ -26,8 +28,8 @@ class PokemonService: PGoAuthDelegate, PGoApiDelegate {
     private var auth: PGoAuth?
     private var finalIntent: PGoApiIntent?
     private let authService: AuthService
-    private let username: String
-    private let password: String
+    private let username: String?
+    private let password: String?
     private let moveSets: [MoveSet]
     
     // MARK: Init
@@ -70,14 +72,14 @@ class PokemonService: PGoAuthDelegate, PGoApiDelegate {
         
         switch self.authService {
         case .Google:
-            let googleAuth = GPSOAuth()
+            let googleAuth = GoogleSignInAuth()
             googleAuth.delegate = self
-            googleAuth.login(withUsername: username, withPassword: password)
+            googleAuth.login(withUsername: username!, withPassword: password!)
             self.auth = googleAuth
         case .PTC:
             let ptcAuth = PtcOAuth()
             ptcAuth.delegate = self
-            ptcAuth.login(withUsername: username, withPassword: password)
+            ptcAuth.login(withUsername: username!, withPassword: password!)
             self.auth = ptcAuth
         }
         return false

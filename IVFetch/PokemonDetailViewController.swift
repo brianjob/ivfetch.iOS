@@ -110,7 +110,7 @@ class PokemonDetailViewController: UITableViewController {
         // Return false if you do not want the specified item to be editable.
         return false
     }
-
+    
     private struct PokemonTable {
         var sections: [PokemonTableSection] {
             didSet {
