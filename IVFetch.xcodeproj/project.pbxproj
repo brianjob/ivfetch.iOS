@@ -10,7 +10,6 @@
 		2D36BFDE410F6052852B3E69 /* Pods_IVFetchTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB63D5B1784D7D3CE1F4879A /* Pods_IVFetchTests.framework */; };
 		C71CFD061D74E72400469B50 /* SearchablePokemonCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C71CFD051D74E72400469B50 /* SearchablePokemonCollectionViewController.swift */; };
 		C77316381D77B0A70007D7DC /* SignInButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C77316371D77B0A70007D7DC /* SignInButton.swift */; };
-		C773163A1D77B7C80007D7DC /* GoogleSignInAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = C77316391D77B7C80007D7DC /* GoogleSignInAuth.swift */; };
 		C77D3AD81D74140A0046A981 /* utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C77D3AD71D74140A0046A981 /* utils.swift */; };
 		C7CF2E9D1D70D1D600DD23B0 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7CF2E9C1D70D1D600DD23B0 /* LoginViewController.swift */; };
 		C7CF2E9F1D70D59900DD23B0 /* PokemonService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7CF2E9E1D70D59900DD23B0 /* PokemonService.swift */; };
@@ -42,7 +41,6 @@
 		87E0032D932BEF881B990CE8 /* Pods-IVFetchTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IVFetchTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-IVFetchTests/Pods-IVFetchTests.debug.xcconfig"; sourceTree = "<group>"; };
 		C71CFD051D74E72400469B50 /* SearchablePokemonCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchablePokemonCollectionViewController.swift; sourceTree = "<group>"; };
 		C77316371D77B0A70007D7DC /* SignInButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInButton.swift; sourceTree = "<group>"; };
-		C77316391D77B7C80007D7DC /* GoogleSignInAuth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoogleSignInAuth.swift; sourceTree = "<group>"; };
 		C77D3AD71D74140A0046A981 /* utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = utils.swift; sourceTree = "<group>"; };
 		C7CF2E9C1D70D1D600DD23B0 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		C7CF2E9E1D70D59900DD23B0 /* PokemonService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PokemonService.swift; sourceTree = "<group>"; };
@@ -117,7 +115,6 @@
 			isa = PBXGroup;
 			children = (
 				C7CF2E9E1D70D59900DD23B0 /* PokemonService.swift */,
-				C77316391D77B7C80007D7DC /* GoogleSignInAuth.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -388,7 +385,6 @@
 			files = (
 				C77D3AD81D74140A0046A981 /* utils.swift in Sources */,
 				C7CF2E9D1D70D1D600DD23B0 /* LoginViewController.swift in Sources */,
-				C773163A1D77B7C80007D7DC /* GoogleSignInAuth.swift in Sources */,
 				C7F780D61D72940F00620990 /* PokemonDetailViewController.swift in Sources */,
 				C7DBD9C81D70B9CB00497B78 /* AppDelegate.swift in Sources */,
 				C7CF2EA41D718A4400DD23B0 /* PokemonCollectionViewCell.swift in Sources */,

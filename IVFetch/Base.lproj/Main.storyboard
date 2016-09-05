@@ -55,15 +55,8 @@
                                 <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5YD-mK-qDe">
-                                <rect key="frame" x="254" y="395.5" width="92" height="30"/>
-                                <state key="normal" title="Click to Retry"/>
-                                <connections>
-                                    <action selector="retryGetLocation" destination="BYZ-38-t0r" eventType="touchUpInside" id="Lbc-le-pTs"/>
-                                </connections>
-                            </button>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Wvb-fZ-TEw">
-                                <rect key="frame" x="290" y="433.5" width="20" height="20"/>
+                                <rect key="frame" x="290" y="396" width="20" height="20"/>
                             </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -71,20 +64,18 @@
                             <constraint firstItem="6x6-nu-pFH" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="2yE-MO-cQ1"/>
                             <constraint firstItem="MwH-3r-4YG" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="6Qh-wc-6CF"/>
                             <constraint firstItem="6x6-nu-pFH" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="7hc-Oc-SWz"/>
-                            <constraint firstItem="5YD-mK-qDe" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Boy-cj-xqg"/>
                             <constraint firstItem="5ql-Xv-9Ks" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="DAc-jL-wtT"/>
                             <constraint firstItem="LKU-8M-OY2" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="DW7-tW-WWN"/>
-                            <constraint firstItem="5YD-mK-qDe" firstAttribute="top" secondItem="LKU-8M-OY2" secondAttribute="bottom" constant="7.5" id="Er6-MU-AV4"/>
                             <constraint firstItem="d1j-ak-AFM" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="Evc-gL-0V1"/>
                             <constraint firstItem="6x6-nu-pFH" firstAttribute="top" secondItem="5ql-Xv-9Ks" secondAttribute="bottom" constant="8" id="QXN-H4-nsj"/>
                             <constraint firstItem="d1j-ak-AFM" firstAttribute="height" secondItem="5ql-Xv-9Ks" secondAttribute="height" id="WJA-nB-hts"/>
                             <constraint firstItem="Wvb-fZ-TEw" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="ZGq-W0-MVs"/>
                             <constraint firstItem="d1j-ak-AFM" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="aIU-26-DlK"/>
                             <constraint firstItem="LKU-8M-OY2" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="eNn-ZA-cJN"/>
-                            <constraint firstItem="Wvb-fZ-TEw" firstAttribute="top" secondItem="5YD-mK-qDe" secondAttribute="bottom" constant="8" id="gza-lO-73K"/>
                             <constraint firstItem="6x6-nu-pFH" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="h45-Dg-otn"/>
                             <constraint firstItem="LKU-8M-OY2" firstAttribute="top" secondItem="MwH-3r-4YG" secondAttribute="bottom" constant="8" id="hO2-CD-2DT"/>
                             <constraint firstItem="5ql-Xv-9Ks" firstAttribute="top" secondItem="d1j-ak-AFM" secondAttribute="bottom" constant="8" id="k3L-Wg-Psf"/>
+                            <constraint firstItem="Wvb-fZ-TEw" firstAttribute="top" secondItem="LKU-8M-OY2" secondAttribute="bottom" constant="7.5" id="mft-yd-3yS"/>
                             <constraint firstItem="LKU-8M-OY2" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="r8h-LL-4Y3"/>
                             <constraint firstItem="LKU-8M-OY2" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="tJn-2x-HW3"/>
                             <constraint firstItem="MwH-3r-4YG" firstAttribute="top" secondItem="6x6-nu-pFH" secondAttribute="bottom" constant="8" id="uBU-bV-CoK"/>
@@ -94,7 +85,6 @@
                     <navigationItem key="navigationItem" id="oba-nb-Ybh"/>
                     <connections>
                         <outlet property="activityIndicator" destination="Wvb-fZ-TEw" id="yQg-eG-cGp"/>
-                        <outlet property="locationRetryButton" destination="5YD-mK-qDe" id="Lzx-8J-MGe"/>
                         <outlet property="loginButton" destination="6x6-nu-pFH" id="D8x-vv-Ltf"/>
                         <outlet property="messageLabel" destination="LKU-8M-OY2" id="lN5-fe-agO"/>
                         <outlet property="passwordTextField" destination="5ql-Xv-9Ks" id="cxD-aL-3xz"/>

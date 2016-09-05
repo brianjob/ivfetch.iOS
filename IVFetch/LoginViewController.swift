@@ -7,9 +7,9 @@
 //
 
 import UIKit
-import CoreLocation
+import PGoApi
 
-class LoginViewController: UIViewController, CLLocationManagerDelegate, UITextFieldDelegate {
+class LoginViewController: UIViewController, UITextFieldDelegate {
 
     
     let COLLECTION_CONTROLLER_ID = "YourPokemonController"
@@ -22,11 +22,8 @@ class LoginViewController: UIViewController, CLLocationManagerDelegate, UITextFi
     let GOOGLE_PASSWORD_PLACEHOLDER = "paste login code here"
     let GOOGLE_SWITCH_AUTH_BUTTON_TEXT = "Switch to PTC"
     
-    let locationManager = CLLocationManager()
-    
     var originalLoginButtonColor: UIColor? = nil
     
-    var location: CLLocation?
     var pokemonService: PokemonService?
     var useGoogleAuth = false
     
@@ -35,17 +32,12 @@ class LoginViewController: UIViewController, CLLocationManagerDelegate, UITextFi
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var messageLabel: UILabel!
-    @IBOutlet weak var locationRetryButton: UIButton!
     @IBOutlet weak var loginButton: UIButton!
     @IBOutlet weak var switchAuthButton: UIButton!
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        if location == nil {
-            loginButton.enabled = false // can't login without location
-        }
         
         originalLoginButtonColor = loginButton.backgroundColor
         loginButton.layer.cornerRadius = 6
@@ -55,11 +47,6 @@ class LoginViewController: UIViewController, CLLocationManagerDelegate, UITextFi
         passwordTextField.delegate = self
         
         setupPtcLogin()
-        
-        // setup location manager
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        retryGetLocation()
     }
 
     
@@ -73,43 +60,12 @@ class LoginViewController: UIViewController, CLLocationManagerDelegate, UITextFi
         return true
     }
     
-    // MARK: CLLocationManagerDelegate
-    
-    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if let firstLocation = locations.first {
-            location = firstLocation
-            print("location received: \(firstLocation.coordinate)")
-            activityIndicator.stopAnimating()
-            loginButton.enabled = true
-        } else {
-            print("No location received")
-            notifyOfErrorFindingLocation()
-        }
-    }
-    
-    func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
-        print("Error finding location: \(error.localizedDescription)")
-        notifyOfErrorFindingLocation()
-    }
-    
-    func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
-        if status == .AuthorizedWhenInUse || status == .AuthorizedAlways {
-            retryGetLocation()
-        }
-    }
-    
     private func showErrorMessage(message: String) {
         messageLabel.text = message
         messageLabel.textColor = UIColor.redColor()
         messageLabel.numberOfLines = 1
         messageLabel.adjustsFontSizeToFitWidth = true
         messageLabel.hidden = false
-    }
-    
-    private func notifyOfErrorFindingLocation() {
-        showErrorMessage("Could not determine location")
-        locationRetryButton.hidden = false
-        activityIndicator.stopAnimating()
     }
 
     // MARK: Actions
@@ -127,7 +83,7 @@ class LoginViewController: UIViewController, CLLocationManagerDelegate, UITextFi
     }
     
     private func openAuthPage() {
-        UIApplication.sharedApplication().openURL(NSURL(string: GoogleSignInAuth.LOGIN_URL)!)
+        UIApplication.sharedApplication().openURL(NSURL(string: GPSOAuth.LOGIN_URL)!)
     }
     
     private func setupGoogleLogin() {
@@ -150,24 +106,6 @@ class LoginViewController: UIViewController, CLLocationManagerDelegate, UITextFi
         switchAuthButton.setTitle(PTC_SWITCH_AUTH_BUTTON_TEXT, forState: .Normal)
     }
     
-    // attempts to get location
-    @IBAction func retryGetLocation() {
-        messageLabel.hidden = true
-        locationRetryButton.hidden = true
-        
-        let authorizationStatus = CLLocationManager.authorizationStatus()
-        switch authorizationStatus {
-        case .Denied, .NotDetermined:
-            showErrorMessage("Authorize location services to continue")
-            locationManager.requestWhenInUseAuthorization()
-        case .AuthorizedAlways, .AuthorizedWhenInUse:
-            activityIndicator.startAnimating()
-            locationManager.requestLocation()
-        case .Restricted:
-            showErrorMessage("Your device does not allow location services")
-        }
-    }
-    
     @IBAction func loginButtonPressed() {
         if (useGoogleAuth) {
             login(AuthService.Google)
@@ -183,11 +121,11 @@ class LoginViewController: UIViewController, CLLocationManagerDelegate, UITextFi
             usernameTextField.resignFirstResponder()
         }
         
-        if let username = usernameTextField.text, let password = passwordTextField.text, let location = self.location {
+        if let username = usernameTextField.text, let password = passwordTextField.text {
             
             activityIndicator.startAnimating()
             
-            self.pokemonService = PokemonService(authService: authService, username: username, password: password, location: location)
+            self.pokemonService = PokemonService(authService: authService, username: username, password: password)
             
             self.pokemonService!.getInventory({
                 (pokemons: [Pokemon]) -> () in

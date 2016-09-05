@@ -30,14 +30,49 @@ class GoogleSignInAuth : PGoAuth {
     var authToken: Pogoprotos.Networking.Envelopes.AuthTicket?
     var manager: Manager
     var banned: Bool = false
+    var refreshToken: String?
     
     init() {
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
         manager = Alamofire.Manager(configuration: configuration)
     }
     
+    // 
+    private func refreshAccessToken() {
+        Alamofire.request(.POST, OAUTH_TOKEN_ENDPOINT, parameters: [
+            "client_id": CLIENT_ID,
+            "client_secret": SECRET,
+            "grant_type": "refresh_token",
+            "refresh_token": refreshToken!
+            ]).validate().responseJSON { response in
+                switch response.result {
+                case .Success(let data):
+                    if let json = data as? NSDictionary,
+                    let token = json["id_token"] as? String,
+                        let expiresIn = json["expires_in"] as? Int? {
+                            self.accessToken = token
+                            self.expires = expiresIn
+                            self.expired = false
+                            self.delegate?.didReceiveAuth()
+                    } else {
+                        self.delegate?.didNotReceiveAuth()
+                    }
+                case .Failure:
+                    self.delegate?.didNotReceiveAuth()
+                }
+        }
+    }
+    
     // username is not used and password is oauth code user receives after approving access
     func login(withUsername username: String, withPassword password: String) {
+        // refresh the token if it has expired
+        if loggedIn && expired {
+            refreshAccessToken()
+            return
+        }
+        
+        token = password
+        
         Alamofire.request(.POST, OAUTH_TOKEN_ENDPOINT, parameters: [
             "code": password,
             "client_id": CLIENT_ID,
@@ -48,10 +83,15 @@ class GoogleSignInAuth : PGoAuth {
             ]).validate().responseJSON { response in
                 switch response.result {
                 case .Success(let data):
-                    if let json = data as? NSDictionary, let token = json["id_token"] as? String {
-                        self.accessToken = token
-                        self.loggedIn = true
-                        self.delegate?.didReceiveAuth()
+                    if let json = data as? NSDictionary,
+                        let token = json["id_token"] as? String,
+                        let refreshToken = json["refresh_token"] as? String,
+                        let expires = json["expires_in"] as? Int {
+                            self.accessToken = token
+                            self.refreshToken = refreshToken
+                            self.loggedIn = true
+                            self.expires = expires
+                            self.delegate?.didReceiveAuth()
                     } else {
                         self.delegate?.didNotReceiveAuth()
                     }

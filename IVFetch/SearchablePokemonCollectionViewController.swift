@@ -45,7 +45,7 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
     @IBAction func refreshData(sender: UIBarButtonItem) {
         pokemons.removeAll()
         activityIndicator.startAnimating()
-        pokemonService?.getInventory({
+        pokemonService!.getInventory({
             self.activityIndicator.stopAnimating()
             self.pokemons = $0
             print("data refreshed")

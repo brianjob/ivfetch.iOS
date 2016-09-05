@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import CoreLocation
 import PGoApi
 
 let MOVESET_FILENAME = "moveSets.csv"
@@ -23,8 +22,7 @@ class PokemonService: PGoAuthDelegate, PGoApiDelegate {
     
     // MARK: Properties
 
-    private var request = PGoApiRequest()
-    private var location: CLLocation
+    private var request: PGoApiRequest? = nil
     private var auth: PGoAuth?
     private var finalIntent: PGoApiIntent?
     private let authService: AuthService
@@ -34,11 +32,10 @@ class PokemonService: PGoAuthDelegate, PGoApiDelegate {
     
     // MARK: Init
     
-    init(authService: AuthService, username: String, password: String, location: CLLocation) {
+    init(authService: AuthService, username: String, password: String) {
         self.authService = authService
         self.username = username
         self.password = password
-        self.location = location
         self.moveSets = PokemonService.getMoveSets()
     }
     
@@ -70,29 +67,28 @@ class PokemonService: PGoAuthDelegate, PGoApiDelegate {
             return true
         }
         
-        switch self.authService {
+        switch authService {
         case .Google:
-            let googleAuth = GoogleSignInAuth()
-            googleAuth.delegate = self
-            googleAuth.login(withUsername: username!, withPassword: password!)
-            self.auth = googleAuth
+            auth = GPSOAuth()
+            auth!.login(withToken: password!)
         case .PTC:
-            let ptcAuth = PtcOAuth()
-            ptcAuth.delegate = self
-            ptcAuth.login(withUsername: username!, withPassword: password!)
-            self.auth = ptcAuth
+            auth = PtcOAuth()
+            auth!.login(withUsername: username!, withPassword: password!)
         }
+        auth!.delegate = self
         return false
     }
     
     // set location and make niantic login request
     private func makeNianticLogin() {
-        self.request = PGoApiRequest(auth: auth)
-        self.request.setLocation(self.location.coordinate.latitude,
-                                 longitude: location.coordinate.longitude,
-                                 altitude: Double(arc4random_uniform(MAX_ALTITUDE) + 1))
-        self.request.simulateAppStart()
-        self.request.makeRequest(.Login, delegate: self)
+        request = PGoApiRequest(auth: auth!)
+        request!.simulateAppStart()
+        request!.makeRequest(.Login, delegate: self)
+
+        if auth!.expired {
+            auth?.authToken = nil
+            auth?.login(withUsername: username!, withPassword: password!)
+        }
     }
     
     
@@ -101,6 +97,7 @@ class PokemonService: PGoAuthDelegate, PGoApiDelegate {
     // callback function when auth service login is successful
     func didReceiveAuth() {
         print("oauth authentication complete")
+        auth?.expired = false
         makeNianticLogin()
     }
     
@@ -114,7 +111,7 @@ class PokemonService: PGoAuthDelegate, PGoApiDelegate {
     
     // dictionary of PGoApiIntent and its associated request method
     lazy private var finalIntentActionDict: [PGoApiIntent: () -> ()]  = [
-        .GetInventory: { self.request.getInventory() }
+        .GetInventory: { self.request!.getInventory() }
     ]
     
     // callback for api request
@@ -124,7 +121,7 @@ class PokemonService: PGoAuthDelegate, PGoApiDelegate {
         switch intent {
         case .Login:
             finalIntentActionDict[finalIntent!]!()
-            request.makeRequest(finalIntent!, delegate: self)
+            request!.makeRequest(finalIntent!, delegate: self)
         case .GetInventory:
             handleGetInventory(response)
         default: break
@@ -134,6 +131,10 @@ class PokemonService: PGoAuthDelegate, PGoApiDelegate {
     func didReceiveApiError(intent: PGoApiIntent, statusCode: Int?) {
         errorCallback(API_ERROR_MESSAGE)
         print("API Error: \(statusCode)")
+    }
+    
+    func didReceiveApiException(intent: PGoApiIntent, exception: PGoApiExceptions) {
+        print("API Exception: \(exception)")
     }
     
     // MARK: API response handlers
@@ -189,7 +190,7 @@ class PokemonService: PGoAuthDelegate, PGoApiDelegate {
             })
         
         if results.count != 1 {
-            print("unexptected result: [\(pokemonId)] \(move1.toString()), \(move2.toString())")
+            print("unexpected result: [\(pokemonId)] \(move1.toString()), \(move2.toString())")
             return MoveSet(moveSetId: nil,
                            pokemonId: pokemonId,
                            fastMoveName: moveToString(move1),
