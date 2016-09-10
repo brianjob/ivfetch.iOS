@@ -111,8 +111,8 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
     private func searchPokemon(pokemon: Pokemon, searchTerm: String) -> Bool {
         return searchString(pokemon.nickname ?? "", searchTerm: searchTerm) ||
                searchString(pokemon.species, searchTerm: searchTerm) ||
-               searchString(pokemon.moveSet.fastMoveName, searchTerm: searchTerm) ||
-               searchString(pokemon.moveSet.specialMoveName, searchTerm: searchTerm )
+               searchString(pokemon.fastMoveName, searchTerm: searchTerm) ||
+               searchString(pokemon.specialMoveName, searchTerm: searchTerm )
     }
     
     private func searchIsEmpty() -> Bool {
@@ -193,12 +193,12 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
     }
     private var offTdoSortAscending = false
     @objc private func sortOffTdo() {
-        filteredPokemons.sortInPlace({ applySortOrder(($0.moveSet.offensiveTDO ?? 0) < ($1.moveSet.offensiveTDO ?? 0), sortAscending: offTdoSortAscending) })
+        filteredPokemons.sortInPlace({ applySortOrder(($0.offensiveTdo ?? 0) < ($1.offensiveTdo ?? 0), sortAscending: offTdoSortAscending) })
         offTdoSortAscending = !offTdoSortAscending
     }
     private var defTdoSortAscending = false
     @objc private func sortDefTdo() {
-        filteredPokemons.sortInPlace({ applySortOrder(($0.moveSet.defensiveTDO ?? 0) < ($1.moveSet.defensiveTDO ?? 0), sortAscending: defTdoSortAscending) })
+        filteredPokemons.sortInPlace({ applySortOrder(($0.defensiveTdo ?? 0) < ($1.defensiveTdo ?? 0), sortAscending: defTdoSortAscending) })
         defTdoSortAscending = !defTdoSortAscending
     }
     
@@ -241,7 +241,7 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
         cell.nameLabel.text = pokemon.displayName
         cell.ivLabel.text = String(format: "%.1f%%", pokemon.ivPct)
         cell.cpLabel.text = "\(pokemon.cp) CP"
-        cell.tdoLabel.text = ("\(pokemon.moveSet.offensiveTDO ?? 0)/\(pokemon.moveSet.defensiveTDO ?? 0) TDO")
+        cell.tdoLabel.text = ("\(pokemon.offensiveTdo ?? 0)/\(pokemon.defensiveTdo ?? 0) TDO")
         
         cell.layer.cornerRadius = 6
         

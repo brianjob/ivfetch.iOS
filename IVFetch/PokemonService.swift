@@ -8,6 +8,7 @@
 
 import Foundation
 import PGoApi
+import PokeGuru
 
 let MOVESET_FILENAME = "moveSets.csv"
 
@@ -18,8 +19,6 @@ class PokemonService: PGoAuthDelegate, PGoApiDelegate {
     let AUTH_ERROR_MESSAGE = "Authentication Failed"
     let GET_INVENTORY_ERROR = "Could Not Retrieve Inventory"
     
-    private let GOOGLE_LOGIN_URL = "https://accounts.google.com/o/oauth2/auth?client_id=848232511240-7so421jotr2609rmqakceuu1luuq0ptb.apps.googleusercontent.com&redirect_uri=urn%3Aietf%3Awg%3Aoauth%3A2.0%3Aoob&response_type=code&scope=openid%20email%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email"
-    
     // MARK: Properties
 
     private var request: PGoApiRequest? = nil
@@ -29,6 +28,7 @@ class PokemonService: PGoAuthDelegate, PGoApiDelegate {
     private let username: String?
     private let password: String?
     private let moveSets: [MoveSet]
+
     
     // MARK: Init
     
@@ -149,6 +149,12 @@ class PokemonService: PGoAuthDelegate, PGoApiDelegate {
                 for pokemon in inventory.inventoryDelta.inventoryItems
                     .filter({ $0.hasInventoryItemData && $0.inventoryItemData.hasPokemonData && !$0.inventoryItemData.pokemonData.isEgg })
                     .map({ $0.inventoryItemData.pokemonData }) {
+
+                        let pokeGuru = PokeGuru(pokemonId: Int(pokemon.pokemonId.rawValue), fastMoveId: Int(pokemon.move1.rawValue),
+                                                specialMoveId: Int(pokemon.move2.rawValue), cp: Int(pokemon.cp),
+                                                individualAttack: Int(pokemon.individualAttack), individualDefense: Int(pokemon.individualDefense),
+                                                individualStamina: Int(pokemon.individualStamina))
+                        
                         pokemons += [Pokemon(
                             nickname: pokemon.nickname,
                             species: pokemon.pokemonId.toString(),
@@ -159,7 +165,13 @@ class PokemonService: PGoAuthDelegate, PGoApiDelegate {
                             cp: Int(pokemon.cp),
                             hp: Int(pokemon.stamina),
                             maxHp: Int(pokemon.staminaMax),
-                            moveSet: lookupMoveSet(Int(pokemon.pokemonId.rawValue), move1: pokemon.move1, move2: pokemon.move2),
+                            fastMoveName: pokeGuru.fastMove.name,
+                            specialMoveName: pokeGuru.specialMove.name,
+                            isSpecialMoveUseless: pokeGuru.uselessSpecial,
+                            offensiveEfficiency: String(format: "%.01f", pokeGuru.offensiveEfficiency * 100),
+                            defensiveEfficiency: String(format: "%.01f", pokeGuru.defensiveEfficiency * 100),
+                            offensiveTdo: Int(round(pokeGuru.tdoOffense)),
+                            defensiveTdo: Int(round(pokeGuru.tdoDefense)),
                             individualAttack: Int(pokemon.individualAttack),
                             individualDefense: Int(pokemon.individualDefense),
                             individualStamina: Int(pokemon.individualStamina),
@@ -212,7 +224,7 @@ class PokemonService: PGoAuthDelegate, PGoApiDelegate {
             .stringByReplacingOccurrencesOfString(" Fast", withString: "")
     }
     
-    private class func getMoveSets() -> [MoveSet] {
+    private static func getMoveSets() -> [MoveSet] {
         let moveSetFile = NSDataAsset(name: MOVESET_FILENAME)?.data
         let moveSetString = String(data: moveSetFile!, encoding: NSUTF8StringEncoding)!
         let moveSetTable = moveSetString.componentsSeparatedByString("\r").map({ $0.componentsSeparatedByString(",")})
@@ -260,7 +272,15 @@ struct Pokemon {
     let hp: Int
     let maxHp: Int
     
-    let moveSet: MoveSet
+    //    let moveSet: MoveSet
+    
+    let fastMoveName: String
+    let specialMoveName: String
+    let isSpecialMoveUseless: Bool?
+    let offensiveEfficiency: String?
+    let defensiveEfficiency: String?
+    let offensiveTdo: Int?
+    let defensiveTdo: Int?
     
     let individualAttack: Int
     let individualDefense: Int

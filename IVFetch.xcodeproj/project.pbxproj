@@ -22,6 +22,8 @@
 		C7DBD9DD1D70B9CB00497B78 /* IVFetchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7DBD9DC1D70B9CB00497B78 /* IVFetchTests.swift */; };
 		C7F780D61D72940F00620990 /* PokemonDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7F780D51D72940F00620990 /* PokemonDetailViewController.swift */; };
 		C7F780DE1D72AF2C00620990 /* PokemonDetailViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7F780DD1D72AF2C00620990 /* PokemonDetailViewCell.swift */; };
+		C7FA54161D83C0B200BCAB7B /* PokeGuru.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7FA54131D83ACD900BCAB7B /* PokeGuru.framework */; };
+		C7FA54171D83C0B200BCAB7B /* PokeGuru.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C7FA54131D83ACD900BCAB7B /* PokeGuru.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D7A39994801B330838EF35CA /* Pods_IVFetch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14F3560A660E6B38C10157FD /* Pods_IVFetch.framework */; };
 /* End PBXBuildFile section */
 
@@ -33,7 +35,42 @@
 			remoteGlobalIDString = C7DBD9C31D70B9CB00497B78;
 			remoteInfo = IVFetch;
 		};
+		C7FA54121D83ACD900BCAB7B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C7FA540D1D83ACD900BCAB7B /* PokeGuru.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C7FA53CB1D7ED65700BCAB7B;
+			remoteInfo = PokeGuru;
+		};
+		C7FA54141D83ACD900BCAB7B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C7FA540D1D83ACD900BCAB7B /* PokeGuru.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C7FA53D51D7ED65700BCAB7B;
+			remoteInfo = PokeGuruTests;
+		};
+		C7FA54181D83C0B300BCAB7B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C7FA540D1D83ACD900BCAB7B /* PokeGuru.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = C7FA53CA1D7ED65700BCAB7B;
+			remoteInfo = PokeGuru;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		C7FA541A1D83C0B300BCAB7B /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				C7FA54171D83C0B200BCAB7B /* PokeGuru.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		14F3560A660E6B38C10157FD /* Pods_IVFetch.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_IVFetch.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -56,6 +93,7 @@
 		C7DBD9DE1D70B9CB00497B78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C7F780D51D72940F00620990 /* PokemonDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PokemonDetailViewController.swift; sourceTree = "<group>"; };
 		C7F780DD1D72AF2C00620990 /* PokemonDetailViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PokemonDetailViewCell.swift; sourceTree = "<group>"; };
+		C7FA540D1D83ACD900BCAB7B /* PokeGuru.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = PokeGuru.xcodeproj; path = ../PokeGuru/PokeGuru.xcodeproj; sourceTree = "<group>"; };
 		CB63D5B1784D7D3CE1F4879A /* Pods_IVFetchTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_IVFetchTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBAC4C400FAB3FD7B256B803 /* Pods-IVFetch.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IVFetch.release.xcconfig"; path = "Pods/Target Support Files/Pods-IVFetch/Pods-IVFetch.release.xcconfig"; sourceTree = "<group>"; };
 		E6F2DED51E179C4150F64798 /* Pods-IVFetch.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IVFetch.debug.xcconfig"; path = "Pods/Target Support Files/Pods-IVFetch/Pods-IVFetch.debug.xcconfig"; sourceTree = "<group>"; };
@@ -66,6 +104,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C7FA54161D83C0B200BCAB7B /* PokeGuru.framework in Frameworks */,
 				D7A39994801B330838EF35CA /* Pods_IVFetch.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -95,6 +134,7 @@
 		BC681D2788CAB08CBC4A0DF8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C7FA540D1D83ACD900BCAB7B /* PokeGuru.xcodeproj */,
 				14F3560A660E6B38C10157FD /* Pods_IVFetch.framework */,
 				CB63D5B1784D7D3CE1F4879A /* Pods_IVFetchTests.framework */,
 			);
@@ -182,6 +222,15 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		C7FA540E1D83ACD900BCAB7B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C7FA54131D83ACD900BCAB7B /* PokeGuru.framework */,
+				C7FA54151D83ACD900BCAB7B /* PokeGuruTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -195,10 +244,12 @@
 				C7DBD9C21D70B9CB00497B78 /* Resources */,
 				197CD1A91E0B9B376CA30FE2 /* [CP] Embed Pods Frameworks */,
 				59960CE0B930890E2EC3DAA9 /* [CP] Copy Pods Resources */,
+				C7FA541A1D83C0B300BCAB7B /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				C7FA54191D83C0B300BCAB7B /* PBXTargetDependency */,
 			);
 			name = IVFetch;
 			productName = IVFetch;
@@ -238,7 +289,7 @@
 				TargetAttributes = {
 					C7DBD9C31D70B9CB00497B78 = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = CWXDGUY399;
+						DevelopmentTeam = 6EFDV2964C;
 					};
 					C7DBD9D71D70B9CB00497B78 = {
 						CreatedOnToolsVersion = 7.3.1;
@@ -257,6 +308,12 @@
 			mainGroup = C7DBD9BB1D70B9CB00497B78;
 			productRefGroup = C7DBD9C51D70B9CB00497B78 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = C7FA540E1D83ACD900BCAB7B /* Products */;
+					ProjectRef = C7FA540D1D83ACD900BCAB7B /* PokeGuru.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				C7DBD9C31D70B9CB00497B78 /* IVFetch */,
@@ -264,6 +321,23 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		C7FA54131D83ACD900BCAB7B /* PokeGuru.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = PokeGuru.framework;
+			remoteRef = C7FA54121D83ACD900BCAB7B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C7FA54151D83ACD900BCAB7B /* PokeGuruTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = PokeGuruTests.xctest;
+			remoteRef = C7FA54141D83ACD900BCAB7B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		C7DBD9C21D70B9CB00497B78 /* Resources */ = {
@@ -412,6 +486,11 @@
 			target = C7DBD9C31D70B9CB00497B78 /* IVFetch */;
 			targetProxy = C7DBD9D91D70B9CB00497B78 /* PBXContainerItemProxy */;
 		};
+		C7FA54191D83C0B300BCAB7B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = PokeGuru;
+			targetProxy = C7FA54181D83C0B300BCAB7B /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -527,6 +606,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = IVFetch/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = brianjob.IVFetch;
@@ -545,6 +625,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = IVFetch/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = brianjob.IVFetch;

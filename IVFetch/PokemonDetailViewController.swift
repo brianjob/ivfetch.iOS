@@ -43,21 +43,21 @@ class PokemonDetailViewController: UITableViewController {
                     ]),
                 
                 PokemonTableSection(name: "Moves", order: 3, cells: [
-                    PokemonTableCell(label: "Quick Move", value: pokemon.moveSet.fastMoveName),
-                    PokemonTableCell(label: "Special Move", value: pokemon.moveSet.specialMoveName),
+                    PokemonTableCell(label: "Quick Move", value: pokemon.fastMoveName),
+                    PokemonTableCell(label: "Special Move", value: pokemon.specialMoveName),
                     PokemonTableCell(label: "Useless Special?", value:
                         {
-                            if pokemon.moveSet.isSpecialMoveUseless == nil  {
+                            if pokemon.isSpecialMoveUseless == nil  {
                                 return "N/A"
                             } else {
-                                return pokemon.moveSet.isSpecialMoveUseless! ? "Yes" : "No"
+                                return pokemon.isSpecialMoveUseless! ? "Yes" : "No"
                             }
                         }()
                     ),
-                    PokemonTableCell(label: "Offensive TDO", value: optionalInt2String(pokemon.moveSet.offensiveTDO)),
-                    PokemonTableCell(label: "Off. Efficiency", value: pokemon.moveSet.offensivePctOfTopMoveSet ?? ""),
-                    PokemonTableCell(label: "Defensive TDO", value: optionalInt2String(pokemon.moveSet.defensiveTDO)),
-                    PokemonTableCell(label: "Def. Efficiency", value: pokemon.moveSet.defensivePctOfTopMoveSet ?? ""),
+                    PokemonTableCell(label: "Offensive TDO", value: optionalInt2String(pokemon.offensiveTdo)),
+                    PokemonTableCell(label: "Off. Efficiency", value: pokemon.offensiveEfficiency ?? ""),
+                    PokemonTableCell(label: "Defensive TDO", value: optionalInt2String(pokemon.defensiveTdo)),
+                    PokemonTableCell(label: "Def. Efficiency", value: pokemon.defensiveEfficiency ?? ""),
                     ]),
                 
                 PokemonTableSection(name: "History", order: 4, cells: [
