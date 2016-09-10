@@ -27,7 +27,6 @@ class PokemonService: PGoAuthDelegate, PGoApiDelegate {
     private let authService: AuthService
     private let username: String?
     private let password: String?
-    private let moveSets: [MoveSet]
 
     
     // MARK: Init
@@ -36,7 +35,6 @@ class PokemonService: PGoAuthDelegate, PGoApiDelegate {
         self.authService = authService
         self.username = username
         self.password = password
-        self.moveSets = PokemonService.getMoveSets()
     }
     
     private var getInventoryCallback: ([Pokemon]) -> () = {_ in }
@@ -162,21 +160,24 @@ class PokemonService: PGoAuthDelegate, PGoApiDelegate {
                             isFavorite: pokemon.favorite == 1,
                             height: Double(pokemon.heightM),
                             weight: Double(pokemon.weightKg),
+                            type: pokeGuru.pokemon.types.map { $0.name }.joinWithSeparator(" / "),
                             cp: Int(pokemon.cp),
                             hp: Int(pokemon.stamina),
+                            eHp: Int(round(pokeGuru.eHp)),
                             maxHp: Int(pokemon.staminaMax),
                             fastMoveName: pokeGuru.fastMove.name,
                             specialMoveName: pokeGuru.specialMove.name,
                             isSpecialMoveUseless: pokeGuru.uselessSpecial,
-                            offensiveEfficiency: String(format: "%.01f", pokeGuru.offensiveEfficiency * 100),
-                            defensiveEfficiency: String(format: "%.01f", pokeGuru.defensiveEfficiency * 100),
+                            offensiveDps: max(pokeGuru.dpsFast, pokeGuru.dpsCombo),
+                            defensiveDps: pokeGuru.dpsDefense,
+                            offensiveEfficiency: pokeGuru.offensiveEfficiency * 100,
+                            defensiveEfficiency: pokeGuru.defensiveEfficiency * 100,
                             offensiveTdo: Int(round(pokeGuru.tdoOffense)),
                             defensiveTdo: Int(round(pokeGuru.tdoDefense)),
                             individualAttack: Int(pokemon.individualAttack),
                             individualDefense: Int(pokemon.individualDefense),
                             individualStamina: Int(pokemon.individualStamina),
-                            battlesAttacked: Int(pokemon.battlesAttacked),
-                            battlesDefended: Int(pokemon.hasBattlesDefended),
+                            battles: Int(pokemon.battlesAttacked) + Int(pokemon.battlesDefended),
                             timeCaught: NSDate(timeIntervalSince1970: Double(pokemon.creationTimeMs) / 1000.0))]
                 }
                 
@@ -191,60 +192,11 @@ class PokemonService: PGoAuthDelegate, PGoApiDelegate {
         }
     }
     
-    // returns nil if no moveset found
-    private func lookupMoveSet(pokemonId: Int,
-                               move1: PGoApi.Pogoprotos.Enums.PokemonMove,
-                               move2: PGoApi.Pogoprotos.Enums.PokemonMove) -> MoveSet {
-        var results = moveSets.filter(
-            { $0.pokemonId == pokemonId &&
-              $0.fastMoveName == moveToString(move1) &&
-              $0.specialMoveName == moveToString(move2)
-            })
-        
-        if results.count != 1 {
-            print("unexpected result: [\(pokemonId)] \(move1.toString()), \(move2.toString())")
-            return MoveSet(moveSetId: nil,
-                           pokemonId: pokemonId,
-                           fastMoveName: moveToString(move1),
-                           specialMoveName: moveToString(move2),
-                           isSpecialMoveUseless: nil,
-                           offensivePctOfTopMoveSet: nil,
-                           defensivePctOfTopMoveSet: nil,
-                           offensiveTDO: nil,
-                           defensiveTDO: nil)
-        }
-        
-        return results[0]
-    }
-    
     private func moveToString(move: PGoApi.Pogoprotos.Enums.PokemonMove) -> String {
         return move.toString()
             .capitalizedString
             .stringByReplacingOccurrencesOfString("_", withString: " ")
             .stringByReplacingOccurrencesOfString(" Fast", withString: "")
-    }
-    
-    private static func getMoveSets() -> [MoveSet] {
-        let moveSetFile = NSDataAsset(name: MOVESET_FILENAME)?.data
-        let moveSetString = String(data: moveSetFile!, encoding: NSUTF8StringEncoding)!
-        let moveSetTable = moveSetString.componentsSeparatedByString("\r").map({ $0.componentsSeparatedByString(",")})
-        
-        var moveSetArray = [MoveSet]()
-        
-        for moveSetRow in moveSetTable[1..<moveSetTable.count] {
-            moveSetArray.append(MoveSet(
-                moveSetId: Int(moveSetRow[0])!,
-                pokemonId: Int(moveSetRow[1])!,
-                fastMoveName: moveSetRow[3],
-                specialMoveName: moveSetRow[4],
-                isSpecialMoveUseless: moveSetRow[5] != "",
-                offensivePctOfTopMoveSet: moveSetRow[6],
-                defensivePctOfTopMoveSet: moveSetRow[7],
-                offensiveTDO: Int(moveSetRow[8])!,
-                defensiveTDO: Int(moveSetRow[9])!))
-        }
-        
-        return moveSetArray
     }
 }
 
@@ -268,17 +220,20 @@ struct Pokemon {
     let height: Double
     let weight: Double
     
+    let type: String
+    
     let cp: Int
     let hp: Int
+    let eHp: Int
     let maxHp: Int
-    
-    //    let moveSet: MoveSet
     
     let fastMoveName: String
     let specialMoveName: String
     let isSpecialMoveUseless: Bool?
-    let offensiveEfficiency: String?
-    let defensiveEfficiency: String?
+    let offensiveDps: Double?
+    let defensiveDps: Double?
+    let offensiveEfficiency: Double?
+    let defensiveEfficiency: Double?
     let offensiveTdo: Int?
     let defensiveTdo: Int?
     
@@ -286,8 +241,7 @@ struct Pokemon {
     let individualDefense: Int
     let individualStamina: Int
     
-    let battlesAttacked: Int
-    let battlesDefended: Int
+    let battles: Int
     
     let timeCaught: NSDate
     
@@ -304,16 +258,4 @@ struct Pokemon {
             .capitalizedString
             .stringByReplacingOccurrencesOfString("_", withString: " ")
     }
-}
-
-struct MoveSet {
-    let moveSetId: Int?
-    let pokemonId: Int
-    let fastMoveName: String
-    let specialMoveName: String
-    let isSpecialMoveUseless: Bool?
-    let offensivePctOfTopMoveSet: String?
-    let defensivePctOfTopMoveSet: String?
-    let offensiveTDO: Int?
-    let defensiveTDO: Int?
 }

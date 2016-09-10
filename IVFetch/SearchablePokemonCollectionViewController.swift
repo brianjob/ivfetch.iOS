@@ -31,6 +31,8 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
         }
     }
     
+    var currentSearchQuery: String? = nil
+    
     // MARK: Outlets
     
     @IBOutlet weak var searchBarContainer: UIView!
@@ -67,6 +69,8 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
         collectionView.delegate = self
         collectionView.dataSource = self
         
+        self.definesPresentationContext = true // hide search bar on segue
+        
         //setup the search controller
         searchController = ({
             let searchController = UISearchController(searchResultsController: nil)
@@ -95,17 +99,17 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
         activityIndicator.hidesWhenStopped = true
     }
     
+//    override func viewDidAppear(animated: Bool) {
+//        searchController?.searchBar.text = currentSearchQuery
+//        filterData()
+//    }
+    
     //MARK: Private
 
     private func searchString(string: String, searchTerm:String) -> Bool {
-        var matches:Array<AnyObject> = []
-        do {
-            let regex = try NSRegularExpression(pattern: searchTerm, options: [.CaseInsensitive, .AllowCommentsAndWhitespace])
-            let range = NSMakeRange(0, string.characters.count)
-            matches = regex.matchesInString(string, options: [], range: range)
-        } catch _ {
-        }
-        return matches.count > 0
+        return string.lowercaseString.containsString(
+            searchTerm.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet()).lowercaseString
+        )
     }
     
     private func searchPokemon(pokemon: Pokemon, searchTerm: String) -> Bool {
@@ -122,7 +126,7 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
         return true
     }
     
-    private func filterData() {
+    func filterData() {
         if (searchIsEmpty()) {
             filteredPokemons = pokemons
         } else {
@@ -265,6 +269,8 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
                 let selectedPokemon = filteredPokemons[indexPath.row]
                 pokemonDetailViewController.pokemon = selectedPokemon
                 pokemonDetailViewController.title = selectedPokemon.displayName
+                
+                currentSearchQuery = searchController?.searchBar.text // save search query to repopulate on return
             }
         } else if let loginController = segue.destinationViewController as? LoginViewController {
             loginController.logout()
@@ -273,7 +279,6 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
         // hide the keyboard
         if ((searchController?.searchBar.isFirstResponder()) != nil) {
             searchController?.searchBar.resignFirstResponder()
-            searchController?.active = false
         }
     }
 

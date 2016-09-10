@@ -30,6 +30,7 @@ class PokemonDetailViewController: UITableViewController {
                 PokemonTableSection(name: "Bio", order: 1, cells: [
                     PokemonTableCell(label: "Nickname", value: pokemon.nickname ?? ""),
                     PokemonTableCell(label: "Species", value: "\(pokemon.speciesPretty) [\(pokemon.pokemonId)]"),
+                    PokemonTableCell(label: "Type", value: pokemon.type),
                     PokemonTableCell(label: "Favorite", value: pokemon.isFavorite ? "Yes" : "No"),
                     PokemonTableCell(label: "Height", value: "\(String(format: "%.2f", pokemon.height)) m"),
                     PokemonTableCell(label: "Weight", value: "\(String(format: "%.2f", pokemon.weight)) kg")
@@ -37,8 +38,8 @@ class PokemonDetailViewController: UITableViewController {
 
                 PokemonTableSection(name: "Stats", order: 2, cells: [
                     PokemonTableCell(label: "CP", value: String(pokemon.cp)),
-                    PokemonTableCell(label: "HP", value: String(pokemon.hp)),
-                    PokemonTableCell(label: "Max HP", value: String(pokemon.maxHp)),
+                    PokemonTableCell(label: "HP", value: String(pokemon.maxHp)),
+                    PokemonTableCell(label: "Effective HP", value: String(pokemon.eHp)),
                     PokemonTableCell(label: "IV", value: "\(pokemon.individualAttack)/\(pokemon.individualDefense)/\(pokemon.individualStamina) [\(String(format: "%.2f", pokemon.ivPct))%]"),
                     ]),
                 
@@ -55,14 +56,13 @@ class PokemonDetailViewController: UITableViewController {
                         }()
                     ),
                     PokemonTableCell(label: "Offensive TDO", value: optionalInt2String(pokemon.offensiveTdo)),
-                    PokemonTableCell(label: "Off. Efficiency", value: pokemon.offensiveEfficiency ?? ""),
+                    PokemonTableCell(label: "Off. Efficiency", value: "\(String(format: "%.01f", pokemon.offensiveEfficiency ?? 0.0))%"),
                     PokemonTableCell(label: "Defensive TDO", value: optionalInt2String(pokemon.defensiveTdo)),
-                    PokemonTableCell(label: "Def. Efficiency", value: pokemon.defensiveEfficiency ?? ""),
+                    PokemonTableCell(label: "Def. Efficiency", value: "\(String(format: "%.01f", pokemon.defensiveEfficiency ?? 0.0))%"),
                     ]),
                 
                 PokemonTableSection(name: "History", order: 4, cells: [
-                    PokemonTableCell(label: "Gyms Attacked", value: String(pokemon.battlesAttacked)),
-                    PokemonTableCell(label: "Gyms Defended", value: String(pokemon.battlesDefended)),
+                    PokemonTableCell(label: "Gyms Battles", value: String(pokemon.battles)),
                     PokemonTableCell(label: "Date Caught", value: fmt.stringFromDate(pokemon.timeCaught))
                     ])
                 ])
@@ -110,6 +110,7 @@ class PokemonDetailViewController: UITableViewController {
         // Return false if you do not want the specified item to be editable.
         return false
     }
+    
     
     private struct PokemonTable {
         var sections: [PokemonTableSection] {
