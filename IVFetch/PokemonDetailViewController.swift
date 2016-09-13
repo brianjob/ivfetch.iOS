@@ -86,22 +86,13 @@ class PokemonDetailViewController: UITableViewController {
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(
-            CELL_IDENTIFIER, forIndexPath: indexPath) as! PokemonDetailViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(CELL_IDENTIFIER, forIndexPath: indexPath)
         
         let pokemonCell = pokemonTable!.getCell(atSection: indexPath.section, atCell: indexPath.row)
-        
-        cell.label.font = UIFont.boldSystemFontOfSize(17.0)
-        cell.label.numberOfLines = 1
-        cell.label.adjustsFontSizeToFitWidth = false
-        cell.label.text = pokemonCell.label
-        cell.label.sizeToFit()
-        
-        cell.value.numberOfLines = 1
-        cell.value.minimumScaleFactor = 0.5
-        cell.value.adjustsFontSizeToFitWidth = true
-        cell.value.text = pokemonCell.value
-        
+
+        cell.textLabel?.text = pokemonCell.label
+        cell.detailTextLabel?.text = pokemonCell.value
+       
         return cell
     }
     
