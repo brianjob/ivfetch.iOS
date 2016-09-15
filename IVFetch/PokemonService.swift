@@ -67,8 +67,9 @@ class PokemonService: PGoAuthDelegate, PGoApiDelegate {
         
         switch authService {
         case .Google:
-            auth = GPSOAuth()
-            auth!.login(withToken: password!)
+            let gpsOAuth = GPSOAuth()
+            gpsOAuth.login(withToken: password!)
+            auth = gpsOAuth
         case .PTC:
             auth = PtcOAuth()
             auth!.login(withUsername: username!, withPassword: password!)

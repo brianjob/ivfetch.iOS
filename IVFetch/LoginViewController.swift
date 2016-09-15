@@ -121,6 +121,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             usernameTextField.resignFirstResponder()
         }
         
+        loginButton.enabled = false // prevent double clicks
+        switchAuthButton.enabled = false
+        
         if let username = usernameTextField.text, let password = passwordTextField.text {
             
             activityIndicator.startAnimating()
@@ -141,6 +144,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 }, errorCallback: { (errorMessage: String) -> () in
                     self.activityIndicator.stopAnimating()
                     self.showErrorMessage(errorMessage)
+                    self.loginButton.enabled = true
+                    self.switchAuthButton.enabled = true
                 }
             )
         }
