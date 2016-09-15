@@ -21,7 +21,6 @@
 		C7DBD9D21D70B9CB00497B78 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C7DBD9D01D70B9CB00497B78 /* LaunchScreen.storyboard */; };
 		C7DBD9DD1D70B9CB00497B78 /* IVFetchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7DBD9DC1D70B9CB00497B78 /* IVFetchTests.swift */; };
 		C7F780D61D72940F00620990 /* PokemonDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7F780D51D72940F00620990 /* PokemonDetailViewController.swift */; };
-		C7F780DE1D72AF2C00620990 /* PokemonDetailViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7F780DD1D72AF2C00620990 /* PokemonDetailViewCell.swift */; };
 		C7FA54161D83C0B200BCAB7B /* PokeGuru.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7FA54131D83ACD900BCAB7B /* PokeGuru.framework */; };
 		C7FA54171D83C0B200BCAB7B /* PokeGuru.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C7FA54131D83ACD900BCAB7B /* PokeGuru.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D7A39994801B330838EF35CA /* Pods_IVFetch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14F3560A660E6B38C10157FD /* Pods_IVFetch.framework */; };
@@ -92,7 +91,6 @@
 		C7DBD9DC1D70B9CB00497B78 /* IVFetchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IVFetchTests.swift; sourceTree = "<group>"; };
 		C7DBD9DE1D70B9CB00497B78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C7F780D51D72940F00620990 /* PokemonDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PokemonDetailViewController.swift; sourceTree = "<group>"; };
-		C7F780DD1D72AF2C00620990 /* PokemonDetailViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PokemonDetailViewCell.swift; sourceTree = "<group>"; };
 		C7FA540D1D83ACD900BCAB7B /* PokeGuru.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = PokeGuru.xcodeproj; path = ../PokeGuru/PokeGuru.xcodeproj; sourceTree = "<group>"; };
 		CB63D5B1784D7D3CE1F4879A /* Pods_IVFetchTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_IVFetchTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBAC4C400FAB3FD7B256B803 /* Pods-IVFetch.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IVFetch.release.xcconfig"; path = "Pods/Target Support Files/Pods-IVFetch/Pods-IVFetch.release.xcconfig"; sourceTree = "<group>"; };
@@ -163,7 +161,6 @@
 			isa = PBXGroup;
 			children = (
 				C7DBD9CB1D70B9CB00497B78 /* Main.storyboard */,
-				C7F780DD1D72AF2C00620990 /* PokemonDetailViewCell.swift */,
 				C7CF2EA31D718A4400DD23B0 /* PokemonCollectionViewCell.swift */,
 				C76BD36A1D88658C000BD644 /* PokemonSpriteCollectionViewCell.swift */,
 			);
@@ -464,7 +461,6 @@
 				C7DBD9C81D70B9CB00497B78 /* AppDelegate.swift in Sources */,
 				C7CF2EA41D718A4400DD23B0 /* PokemonCollectionViewCell.swift in Sources */,
 				C7CF2E9F1D70D59900DD23B0 /* PokemonService.swift in Sources */,
-				C7F780DE1D72AF2C00620990 /* PokemonDetailViewCell.swift in Sources */,
 				C71CFD061D74E72400469B50 /* SearchablePokemonCollectionViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

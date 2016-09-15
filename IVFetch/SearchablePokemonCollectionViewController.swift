@@ -13,15 +13,14 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
     private let REUSE_IDENTIFIER = "PokemonCell"
 
     private let COLLECTION_VIEW_PADDING = CGFloat(10)
-    private let TOOLBAR_FONT_NAME = "Helvetica"
-    private let TOOLBAR_FONT_SIZE = CGFloat(20)
     private let TOOLBAR_PADDING = CGFloat(10)
     private let TOOL_BAR_HEIGHT = CGFloat(44)
     private let TOOL_BAR_TEXT_HEIGHT = CGFloat(20)
-    private let TOOL_BAR_TEXT_WIDTH = CGFloat(31)
+    //    private let TOOL_BAR_TEXT_WIDTH = CGFloat(31)
+    private let TOOL_BAR_CHAR_WIDTH = 12
     private let ARROW_SIZE = CGFloat(12)
     private let CLOCK_SIZE = CGFloat(16)
-    private let UP_ARROW_Y = CGFloat(0)
+    private let UP_ARROW_Y = CGFloat(1)
     private let DOWN_ARROW_Y = CGFloat(30)
     
     private var recentButton: UIBarButtonItem?
@@ -195,15 +194,21 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
     }
     
     private func setupToolbar() {
+        let oTdoButtonText = "Off"
+        let dTdoButtonText = "Def"
+        let idButtonText = "#"
+        let cpButtonText = "CP"
+        let ivButtonText = "IV"
+        
         let fixedSpace = UIBarButtonItem(barButtonSystemItem: .FixedSpace, target: nil, action: nil)
         fixedSpace.width = TOOLBAR_PADDING
         
         recentButton = makeImageBarButtonItem("clock-32", action: #selector(sortRecent), width: CLOCK_SIZE)
-        oTdoButton = makeTextBarButtonItem("Off.", action: #selector(sortOffTdo), width: TOOL_BAR_TEXT_WIDTH)
-        dTdoButton = makeTextBarButtonItem("Def.", action: #selector(sortDefTdo), width: TOOL_BAR_TEXT_WIDTH)
-        idButton = makeTextBarButtonItem("#", action: #selector(sortSpecies), width: TOOL_BAR_TEXT_WIDTH)
-        cpButton = makeTextBarButtonItem("CP", action: #selector(sortCp), width: TOOL_BAR_TEXT_WIDTH)
-        ivButton = makeTextBarButtonItem("IV", action: #selector(sortIv), width:TOOL_BAR_TEXT_WIDTH)
+        oTdoButton = makeTextBarButtonItem(oTdoButtonText, action: #selector(sortOffTdo))
+        dTdoButton = makeTextBarButtonItem(dTdoButtonText, action: #selector(sortDefTdo))
+        idButton = makeTextBarButtonItem(idButtonText, action: #selector(sortSpecies))
+        cpButton = makeTextBarButtonItem(cpButtonText, action: #selector(sortCp))
+        ivButton = makeTextBarButtonItem(ivButtonText, action: #selector(sortIv))
 
         toolbar?.items = [
             UIBarButtonItem(barButtonSystemItem: .FlexibleSpace , target: nil, action: nil),
@@ -225,7 +230,8 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
         return buttonItem
     }
     
-    private func makeTextBarButtonItem(title: String, action: Selector, width: CGFloat) -> UIBarButtonItem {
+    private func makeTextBarButtonItem(title: String, action: Selector) -> UIBarButtonItem {
+        let width = CGFloat(title.characters.count * TOOL_BAR_CHAR_WIDTH)
         let label = UILabel(frame: CGRectMake(0, (TOOL_BAR_HEIGHT - TOOL_BAR_TEXT_HEIGHT) / 2, width, TOOL_BAR_TEXT_HEIGHT))
         label.text = title
         label.textColor = self.view.tintColor
@@ -266,13 +272,13 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
         sortField = .Recent
         recentSortAscending = !recentSortAscending
     }
-    private var nameSortAscending = false
+    private var nameSortAscending = true
     @objc private func sortName() {
         filteredPokemons.sortInPlace({ applySortOrder($0.displayName.lowercaseString < $1.displayName.lowercaseString, sortAscending: nameSortAscending) })
         sortField = .Name
         nameSortAscending = !nameSortAscending
     }
-    private var speciesSortAscending = false
+    private var speciesSortAscending = true
     @objc private func sortSpecies() {
         filteredPokemons.sortInPlace({ applySortOrder($0.pokemonId < $1.pokemonId, sortAscending: speciesSortAscending) })
         sortField = .Id
@@ -336,13 +342,25 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
         
         if let sortField = sortField {
             switch sortField {
-            case .OTdo, .DTdo:
-                cell.topLabel.text = getTdoLabel(pokemon)
-            case .Cp, .Iv, .Recent, .Name, .Id:
-                cell.topLabel.text = getCpIvLabel(pokemon)
+            case .OTdo:
+                cell.topLabel.text = "\(pokemon.offensiveTdo ?? 0) oTDO"
+            case .DTdo:
+                cell.topLabel.text = "\(pokemon.defensiveTdo ?? 0) dTDO"
+            case .Cp:
+                cell.topLabel.text = "\(pokemon.cp) cp"
+            case .Iv:
+                cell.topLabel.text = "\(Int(round(pokemon.ivPct)))%"
+            case .Recent:
+                let dateFormatter = NSDateFormatter()
+                dateFormatter.dateFormat = "MM/dd/yy"
+                cell.topLabel.text = dateFormatter.stringFromDate(pokemon.timeCaught)
+            case .Id:
+                cell.topLabel.text = "\(pokemon.cp) cp"
+            default:
+                cell.topLabel.text = "\(pokemon.cp) cp"
             }
         } else {
-            cell.topLabel.text = getCpIvLabel(pokemon)
+            cell.topLabel.text = "\(pokemon.cp) cp"
         }
         
 
@@ -355,14 +373,6 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
         label.minimumScaleFactor = 0.4
         label.adjustsFontSizeToFitWidth = true
         label.textAlignment = .Center
-    }
-    
-    private func getCpIvLabel(pokemon: Pokemon) -> String {
-        return "\(pokemon.cp)cp \(Int(round(pokemon.ivPct)))%"
-    }
-    
-    private func getTdoLabel(pokemon: Pokemon) -> String {
-        return "\(pokemon.offensiveTdo ?? 0)/\(pokemon.defensiveTdo ?? 0) tdo"
     }
     
     // MARK: UIScrollViewDelegate

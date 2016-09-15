@@ -162,14 +162,19 @@ class PokemonService: PGoAuthDelegate, PGoApiDelegate {
                             height: Double(pokemon.heightM),
                             weight: Double(pokemon.weightKg),
                             type: pokeGuru.pokemon.types.map { $0.name }.joinWithSeparator(" / "),
+                            attack: Int(round(pokeGuru.attack)),
+                            defense: Int(round(pokeGuru.defense)),
                             cp: Int(pokemon.cp),
                             hp: Int(pokemon.stamina),
                             eHp: Int(round(pokeGuru.eHp)),
                             maxHp: Int(pokemon.staminaMax),
                             fastMoveName: pokeGuru.fastMove.name,
+                            fastMoveType: pokeGuru.fastMove.type.name,
                             specialMoveName: pokeGuru.specialMove.name,
+                            specialMoveType: pokeGuru.specialMove.type.name,
                             isSpecialMoveUseless: pokeGuru.uselessSpecial,
-                            offensiveDps: max(pokeGuru.dpsFast, pokeGuru.dpsCombo),
+                            fastDps: pokeGuru.dpsFast,
+                            comboDps: pokeGuru.dpsCombo,
                             defensiveDps: pokeGuru.dpsDefense,
                             offensiveEfficiency: pokeGuru.offensiveEfficiency * 100,
                             defensiveEfficiency: pokeGuru.defensiveEfficiency * 100,
@@ -223,15 +228,20 @@ struct Pokemon {
     
     let type: String
     
+    let attack: Int
+    let defense: Int
     let cp: Int
     let hp: Int
     let eHp: Int
     let maxHp: Int
     
     let fastMoveName: String
+    let fastMoveType: String
     let specialMoveName: String
+    let specialMoveType: String
     let isSpecialMoveUseless: Bool?
-    let offensiveDps: Double?
+    let fastDps: Double?
+    let comboDps: Double?
     let defensiveDps: Double?
     let offensiveEfficiency: Double?
     let defensiveEfficiency: Double?

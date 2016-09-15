@@ -38,6 +38,8 @@ class PokemonDetailViewController: UITableViewController {
 
                 PokemonTableSection(name: "Stats", order: 2, cells: [
                     PokemonTableCell(label: "CP", value: String(pokemon.cp)),
+                    PokemonTableCell(label: "Attack", value: String(pokemon.attack)),
+                    PokemonTableCell(label: "Defense", value: String(pokemon.defense)),
                     PokemonTableCell(label: "HP", value: String(pokemon.maxHp)),
                     PokemonTableCell(label: "Effective HP", value: String(pokemon.eHp)),
                     PokemonTableCell(label: "IV", value: "\(pokemon.individualAttack)/\(pokemon.individualDefense)/\(pokemon.individualStamina) [\(String(format: "%.2f", pokemon.ivPct))%]"),
@@ -45,7 +47,9 @@ class PokemonDetailViewController: UITableViewController {
                 
                 PokemonTableSection(name: "Moves", order: 3, cells: [
                     PokemonTableCell(label: "Quick Move", value: pokemon.fastMoveName),
+                    PokemonTableCell(label: "Quick Move Type", value: pokemon.fastMoveType),
                     PokemonTableCell(label: "Special Move", value: pokemon.specialMoveName),
+                    PokemonTableCell(label: "Special Move Type", value: pokemon.specialMoveType),
                     PokemonTableCell(label: "Useless Special?", value:
                         {
                             if pokemon.isSpecialMoveUseless == nil  {
@@ -55,10 +59,12 @@ class PokemonDetailViewController: UITableViewController {
                             }
                         }()
                     ),
+                    PokemonTableCell(label: "Quick Move DPS", value: optionalDouble2String(pokemon.fastDps)),
+                    PokemonTableCell(label: "Combo DPS", value: optionalDouble2String(pokemon.comboDps)),
                     PokemonTableCell(label: "Offensive TDO", value: optionalInt2String(pokemon.offensiveTdo)),
-                    PokemonTableCell(label: "Off. Efficiency", value: "\(String(format: "%.01f", pokemon.offensiveEfficiency ?? 0.0))%"),
+                    PokemonTableCell(label: "Off. Efficiency", value: "\(optionalDouble2String(pokemon.offensiveEfficiency))%"),
                     PokemonTableCell(label: "Defensive TDO", value: optionalInt2String(pokemon.defensiveTdo)),
-                    PokemonTableCell(label: "Def. Efficiency", value: "\(String(format: "%.01f", pokemon.defensiveEfficiency ?? 0.0))%"),
+                    PokemonTableCell(label: "Def. Efficiency", value: "\(optionalDouble2String(pokemon.defensiveEfficiency))%"),
                     ]),
                 
                 PokemonTableSection(name: "History", order: 4, cells: [
@@ -71,6 +77,10 @@ class PokemonDetailViewController: UITableViewController {
     
     private func optionalInt2String(value: Int?) -> String {
         return value == nil ? "" : String(value!)
+    }
+    
+    private func optionalDouble2String(value: Double?) -> String {
+        return value == nil ? "" : String(format: "%.01f", value!)
     }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
