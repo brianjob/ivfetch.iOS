@@ -16,7 +16,6 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
     private let TOOLBAR_PADDING = CGFloat(10)
     private let TOOL_BAR_HEIGHT = CGFloat(44)
     private let TOOL_BAR_TEXT_HEIGHT = CGFloat(20)
-    //    private let TOOL_BAR_TEXT_WIDTH = CGFloat(31)
     private let TOOL_BAR_CHAR_WIDTH = 12
     private let ARROW_SIZE = CGFloat(12)
     private let CLOCK_SIZE = CGFloat(16)
@@ -65,6 +64,7 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
     // MARK: Actions
     
     @IBAction func refreshData(sender: UIBarButtonItem) {
+        sortField = nil
         pokemons.removeAll()
         activityIndicator.startAnimating()
         pokemonService!.getInventory({
@@ -158,11 +158,14 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
     private func applySortArrow() {
         setupToolbar() // clear up/down arrows
         
+        guard let sortField = sortField
+            else { return }
+        
         var buttonToAddArrow: UIBarButtonItem = recentButton!
         var sortAscending: Bool = true
         
         // tint button for sorted field
-        switch sortField! {
+        switch sortField {
         case .Recent:
             buttonToAddArrow = recentButton!
             sortAscending = recentSortAscending
