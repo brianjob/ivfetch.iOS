@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SearchablePokemonCollectionViewController: UIViewController, UISearchControllerDelegate, UISearchResultsUpdating, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout
+class SearchablePokemonCollectionViewController: UIViewController, UISearchControllerDelegate, UISearchResultsUpdating, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIPopoverPresentationControllerDelegate
 {
     private let REUSE_IDENTIFIER = "PokemonCell"
 
@@ -48,9 +48,13 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
     
     private var currentSearchQuery: String? = nil
     
-    var sortField: SortField? = nil {
+    var primarySortField: SortField? = nil
+    
+    var secondarySortField: SortField? = nil {
         didSet {
-            applySortArrow()
+            print("sort by \(primarySortField?.rawValue), then by \(secondarySortField!.rawValue)")
+            drawSortArrow()
+            applySort()
         }
     }
     
@@ -64,7 +68,7 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
     // MARK: Actions
     
     @IBAction func refreshData(sender: UIBarButtonItem) {
-        sortField = nil
+        primarySortField = nil
         pokemons.removeAll()
         activityIndicator.startAnimating()
         pokemonService!.getInventory({
@@ -155,10 +159,10 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
     
     // MARK: Toolbar
     
-    private func applySortArrow() {
+    private func drawSortArrow() {
         setupToolbar() // clear up/down arrows
         
-        guard let sortField = sortField
+        guard let sortField = primarySortField
             else { return }
         
         var buttonToAddArrow: UIBarButtonItem = recentButton!
@@ -184,8 +188,6 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
         case .Iv:
             buttonToAddArrow = ivButton!
             sortAscending = ivSortAscending
-        default:
-            break
         }
         
         // add arrows
@@ -206,12 +208,12 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
         let fixedSpace = UIBarButtonItem(barButtonSystemItem: .FixedSpace, target: nil, action: nil)
         fixedSpace.width = TOOLBAR_PADDING
         
-        recentButton = makeImageBarButtonItem("clock-32", action: #selector(sortRecent), width: CLOCK_SIZE)
-        oTdoButton = makeTextBarButtonItem(oTdoButtonText, action: #selector(sortOffTdo))
-        dTdoButton = makeTextBarButtonItem(dTdoButtonText, action: #selector(sortDefTdo))
-        idButton = makeTextBarButtonItem(idButtonText, action: #selector(sortSpecies))
-        cpButton = makeTextBarButtonItem(cpButtonText, action: #selector(sortCp))
-        ivButton = makeTextBarButtonItem(ivButtonText, action: #selector(sortIv))
+        recentButton = makeImageBarButtonItem("clock-32", width: CLOCK_SIZE)
+        oTdoButton = makeTextBarButtonItem(oTdoButtonText)
+        dTdoButton = makeTextBarButtonItem(dTdoButtonText)
+        idButton = makeTextBarButtonItem(idButtonText)
+        cpButton = makeTextBarButtonItem(cpButtonText)
+        ivButton = makeTextBarButtonItem(ivButtonText)
 
         toolbar?.items = [
             UIBarButtonItem(barButtonSystemItem: .FlexibleSpace , target: nil, action: nil),
@@ -220,10 +222,14 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
         ]
     }
     
-    private func makeBarButtonItem(contentView: UIView, action: Selector) -> UIBarButtonItem {
+    private func makeBarButtonItem(contentView: UIView) -> UIBarButtonItem {
         let button = UIButton(type: .Custom)
         button.frame = CGRectMake(0, 0, contentView.frame.width, TOOL_BAR_HEIGHT)
-        button.addTarget(self, action: action, forControlEvents: .TouchUpInside)
+        button.addTarget(self, action: #selector(applyPrimarySort), forControlEvents: .TouchUpInside)
+
+        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(showSecondarySortModal))
+        button.addGestureRecognizer(longPress)
+
         button.tintColor = self.view.tintColor
         
         button.addSubview(contentView)
@@ -233,7 +239,7 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
         return buttonItem
     }
     
-    private func makeTextBarButtonItem(title: String, action: Selector) -> UIBarButtonItem {
+    private func makeTextBarButtonItem(title: String) -> UIBarButtonItem {
         let width = CGFloat(title.characters.count * TOOL_BAR_CHAR_WIDTH)
         let label = UILabel(frame: CGRectMake(0, (TOOL_BAR_HEIGHT - TOOL_BAR_TEXT_HEIGHT) / 2, width, TOOL_BAR_TEXT_HEIGHT))
         label.text = title
@@ -241,18 +247,14 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
         label.textAlignment = .Center
         label.backgroundColor = UIColor.clearColor()
         
-        return makeBarButtonItem(label, action: action)
+        return makeBarButtonItem(label)
     }
     
-    private func makeImageBarButtonItem(imageName: String, action: Selector, width: CGFloat) -> UIBarButtonItem {
+    private func makeImageBarButtonItem(imageName: String, width: CGFloat) -> UIBarButtonItem {
         let clock = UIImageView(frame: CGRectMake(0, (TOOL_BAR_HEIGHT -  width) / 2, width, width))
         clock.image = UIImage(named: imageName)?.imageWithRenderingMode(.AlwaysTemplate)
         
-        return makeBarButtonItem(clock, action: action)
-    }
-    
-    private func makeRecentButton(action: Selector) -> UIBarButtonItem {
-        return makeImageBarButtonItem("clock-32", action: action, width: CLOCK_SIZE)
+        return makeBarButtonItem(clock)
     }
     
     private func getDownArrowSubview(superViewWidth: CGFloat) -> UIView {
@@ -269,53 +271,127 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
 
     // MARK: Sorting
     
-    private var recentSortAscending = false
-    @objc private func sortRecent() {
-        filteredPokemons.sortInPlace({ applySortOrder($0.timeCaught < $1.timeCaught, sortAscending: recentSortAscending) })
-        sortField = .Recent
-        recentSortAscending = !recentSortAscending
-    }
-    private var nameSortAscending = true
-    @objc private func sortName() {
-        filteredPokemons.sortInPlace({ applySortOrder($0.displayName.lowercaseString < $1.displayName.lowercaseString, sortAscending: nameSortAscending) })
-        sortField = .Name
-        nameSortAscending = !nameSortAscending
-    }
-    private var speciesSortAscending = true
-    @objc private func sortSpecies() {
-        filteredPokemons.sortInPlace({ applySortOrder($0.pokemonId < $1.pokemonId, sortAscending: speciesSortAscending) })
-        sortField = .Id
-        speciesSortAscending = !speciesSortAscending
-    }
-    private var cpSortAscending = false
-    @objc private func sortCp() {
-        filteredPokemons.sortInPlace({ applySortOrder($0.cp < $1.cp, sortAscending: cpSortAscending)})
-        sortField = .Cp
-        cpSortAscending = !cpSortAscending
-    }
-    private var ivSortAscending = false
-    @objc private func sortIv() {
-        filteredPokemons.sortInPlace({ applySortOrder($0.ivPct < $1.ivPct, sortAscending: ivSortAscending) })
-        sortField = .Iv
-        ivSortAscending = !ivSortAscending
-    }
-    private var offTdoSortAscending = false
-    @objc private func sortOffTdo() {
-        filteredPokemons.sortInPlace({ applySortOrder(($0.offensiveTdo ?? 0) < ($1.offensiveTdo ?? 0), sortAscending: offTdoSortAscending) })
-        sortField = .OTdo
-        offTdoSortAscending = !offTdoSortAscending
-    }
-    private var defTdoSortAscending = false
-    @objc private func sortDefTdo() {
-        filteredPokemons.sortInPlace({ applySortOrder(($0.defensiveTdo ?? 0) < ($1.defensiveTdo ?? 0), sortAscending: defTdoSortAscending) })
-        sortField = .DTdo
-        defTdoSortAscending = !defTdoSortAscending
+    @objc private func showSecondarySortModal(sender: UIGestureRecognizer) {
+        let storyboard : UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyboard.instantiateViewControllerWithIdentifier("secondarySortPopover") as! SecondarySortController
+        vc.searchablePokemonCollectionViewController = self
+        vc.modalPresentationStyle = UIModalPresentationStyle.Popover
+        vc.preferredContentSize = CGSize(width: 80, height: 150)
+        let popover: UIPopoverPresentationController = vc.popoverPresentationController!
+        
+        popover.sourceView = toolbar
+        popover.sourceRect = (sender.view?.frame)!
+        popover.delegate = self
+        presentViewController(vc, animated: true, completion:nil)
+        setPrimarySortField(sender.view as! UIButton)
+        vc.primarySortField = primarySortField
     }
     
-    private func applySortOrder(condition: Bool, sortAscending: Bool) -> Bool {
-        return sortAscending ? condition : !condition
+    @objc private func applyPrimarySort(sender: UIButton) {
+        setPrimarySortField(sender)
+        applySort()
+        drawSortArrow()
     }
+    
+    private func setPrimarySortField(sender: UIButton) {
+        if sender == cpButton?.customView {
+            primarySortField = .Cp
+        } else if sender == idButton?.customView {
+            primarySortField = .Id
+        } else if sender == ivButton?.customView {
+            primarySortField = .Iv
+        } else if sender == oTdoButton?.customView {
+            primarySortField = .OTdo
+        } else if sender == dTdoButton?.customView {
+            primarySortField = .DTdo
+        } else if sender == recentButton?.customView {
+            primarySortField = .Recent
+        }
+    }
+    
+    private func getSortFieldValue(sortField: SortField, pokemon: Pokemon) -> Double {
+        switch sortField {
+        case .Cp:
+            return Double(pokemon.cp)
+        case .Id:
+            return Double(pokemon.pokemonId)
+        case .Iv:
+            return pokemon.ivPct
+        case .OTdo:
+            return Double(pokemon.offensiveTdo ?? 0)
+        case .DTdo:
+            return Double(pokemon.defensiveTdo ?? 0)
+        case .Recent:
+            return pokemon.timeCaught.timeIntervalSince1970
+        }
+    }
+    
+    private func getPrimarySortOrder(sortField: SortField) -> Bool {
+        var sortOrder: Bool
+        switch sortField {
+        case .Cp:
+            sortOrder = cpSortAscending
+            cpSortAscending = !cpSortAscending
+        case .Id:
+            sortOrder = speciesSortAscending
+            speciesSortAscending = !speciesSortAscending
+        case .Iv:
+            sortOrder = ivSortAscending
+            ivSortAscending = !ivSortAscending
+        case .OTdo:
+            sortOrder = offTdoSortAscending
+            offTdoSortAscending = !offTdoSortAscending
+        case .DTdo:
+            sortOrder = defTdoSortAscending
+            defTdoSortAscending = !defTdoSortAscending
+        case .Recent:
+            sortOrder = recentSortAscending
+            recentSortAscending = !recentSortAscending
+        }
+        
+        return sortOrder
+    }
+    
+    private func getSecondarySortOrder(sortField: SortField) -> Bool {
+        switch sortField {
+        case .Id:
+            return true
+        default:
+            return false
+        }
+    }
+    
+    
+    private func applySort() {
+        let primarySortOrder = getPrimarySortOrder(primarySortField!)
+        
+        filteredPokemons.sortInPlace() {
+            let primarySortField1 = getSortFieldValue(primarySortField!, pokemon: $0)
+            let primarySortField2 = getSortFieldValue(primarySortField!, pokemon: $1)
+            if primarySortField1 < primarySortField2 {
+                return primarySortOrder
+            } else if primarySortField1 > primarySortField2 {
+                return !primarySortOrder
+            } else if secondarySortField != nil {
+                let secondarySortOrder = getSecondarySortOrder(secondarySortField!)
 
+                if getSortFieldValue(secondarySortField!, pokemon: $0) < getSortFieldValue(secondarySortField!, pokemon: $1) {
+                    return secondarySortOrder
+                } else {
+                    return !secondarySortOrder
+                }
+            }
+            
+            return primarySortOrder
+        }
+    }
+    
+    private var recentSortAscending = false
+    private var speciesSortAscending = true
+    private var cpSortAscending = false
+    private var ivSortAscending = false
+    private var offTdoSortAscending = false
+    private var defTdoSortAscending = false
     
     //MARK:UISearchResultsUpdating
     
@@ -343,7 +419,7 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
         cell.pokemonId = pokemon.pokemonId
         cell.bottomLabel.text = pokemon.displayName
         
-        if let sortField = sortField {
+        if let sortField = primarySortField {
             switch sortField {
             case .OTdo:
                 cell.topLabel.text = "\(pokemon.offensiveTdo ?? 0) oTDO"
@@ -358,8 +434,6 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
                 dateFormatter.dateFormat = "MM/dd/yy"
                 cell.topLabel.text = dateFormatter.stringFromDate(pokemon.timeCaught)
             case .Id:
-                cell.topLabel.text = "\(pokemon.cp) cp"
-            default:
                 cell.topLabel.text = "\(pokemon.cp) cp"
             }
         } else {
@@ -386,6 +460,12 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
         searchController?.searchBar.resignFirstResponder()
     }
     
+    // MARK: UIPopoverPresentationControllerDelegate
+    
+    func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .None // force ui popover
+    }
+    
     // MARK: Navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let pokemonDetailViewController = segue.destinationViewController as? PokemonDetailViewController {
@@ -406,18 +486,6 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
         if ((searchController?.searchBar.isFirstResponder()) != nil) {
             searchController?.searchBar.resignFirstResponder()
         }
-    }
-    
-    // MARK: Types
-
-    enum SortField {
-        case Recent
-        case Name
-        case OTdo
-        case DTdo
-        case Id
-        case Cp
-        case Iv
     }
 }
 

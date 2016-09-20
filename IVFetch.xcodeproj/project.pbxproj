@@ -9,7 +9,9 @@
 /* Begin PBXBuildFile section */
 		2D36BFDE410F6052852B3E69 /* Pods_IVFetchTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB63D5B1784D7D3CE1F4879A /* Pods_IVFetchTests.framework */; };
 		C71CFD061D74E72400469B50 /* SearchablePokemonCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C71CFD051D74E72400469B50 /* SearchablePokemonCollectionViewController.swift */; };
+		C739D5571D8CB57D009A868E /* SecondarySortController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C739D5561D8CB57D009A868E /* SecondarySortController.swift */; };
 		C76BD36B1D88658C000BD644 /* PokemonSpriteCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C76BD36A1D88658C000BD644 /* PokemonSpriteCollectionViewCell.swift */; };
+		C776E0CD1D8CB8CF006D3438 /* SortField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C776E0CC1D8CB8CF006D3438 /* SortField.swift */; };
 		C77D3AD81D74140A0046A981 /* utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C77D3AD71D74140A0046A981 /* utils.swift */; };
 		C7CF2E9D1D70D1D600DD23B0 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7CF2E9C1D70D1D600DD23B0 /* LoginViewController.swift */; };
 		C7CF2E9F1D70D59900DD23B0 /* PokemonService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7CF2E9E1D70D59900DD23B0 /* PokemonService.swift */; };
@@ -76,7 +78,9 @@
 		55B242E37921C3994D30BCB2 /* Pods-IVFetchTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IVFetchTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-IVFetchTests/Pods-IVFetchTests.release.xcconfig"; sourceTree = "<group>"; };
 		87E0032D932BEF881B990CE8 /* Pods-IVFetchTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IVFetchTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-IVFetchTests/Pods-IVFetchTests.debug.xcconfig"; sourceTree = "<group>"; };
 		C71CFD051D74E72400469B50 /* SearchablePokemonCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchablePokemonCollectionViewController.swift; sourceTree = "<group>"; };
+		C739D5561D8CB57D009A868E /* SecondarySortController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecondarySortController.swift; sourceTree = "<group>"; };
 		C76BD36A1D88658C000BD644 /* PokemonSpriteCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PokemonSpriteCollectionViewCell.swift; sourceTree = "<group>"; };
+		C776E0CC1D8CB8CF006D3438 /* SortField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SortField.swift; sourceTree = "<group>"; };
 		C77D3AD71D74140A0046A981 /* utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = utils.swift; sourceTree = "<group>"; };
 		C7CF2E9C1D70D1D600DD23B0 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		C7CF2E9E1D70D59900DD23B0 /* PokemonService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PokemonService.swift; sourceTree = "<group>"; };
@@ -145,6 +149,7 @@
 				C7CF2E9C1D70D1D600DD23B0 /* LoginViewController.swift */,
 				C71CFD051D74E72400469B50 /* SearchablePokemonCollectionViewController.swift */,
 				C7F780D51D72940F00620990 /* PokemonDetailViewController.swift */,
+				C739D5561D8CB57D009A868E /* SecondarySortController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -153,6 +158,7 @@
 			isa = PBXGroup;
 			children = (
 				C7CF2E9E1D70D59900DD23B0 /* PokemonService.swift */,
+				C776E0CC1D8CB8CF006D3438 /* SortField.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -455,12 +461,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				C77D3AD81D74140A0046A981 /* utils.swift in Sources */,
+				C739D5571D8CB57D009A868E /* SecondarySortController.swift in Sources */,
 				C76BD36B1D88658C000BD644 /* PokemonSpriteCollectionViewCell.swift in Sources */,
 				C7CF2E9D1D70D1D600DD23B0 /* LoginViewController.swift in Sources */,
 				C7F780D61D72940F00620990 /* PokemonDetailViewController.swift in Sources */,
 				C7DBD9C81D70B9CB00497B78 /* AppDelegate.swift in Sources */,
 				C7CF2EA41D718A4400DD23B0 /* PokemonCollectionViewCell.swift in Sources */,
 				C7CF2E9F1D70D59900DD23B0 /* PokemonService.swift in Sources */,
+				C776E0CD1D8CB8CF006D3438 /* SortField.swift in Sources */,
 				C71CFD061D74E72400469B50 /* SearchablePokemonCollectionViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -604,6 +612,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = IVFetch/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = brianjob.ivfetch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -623,6 +632,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = IVFetch/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = brianjob.ivfetch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
