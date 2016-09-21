@@ -52,7 +52,6 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
     
     var secondarySortField: SortField? = nil {
         didSet {
-            print("sort by \(primarySortField?.rawValue), then by \(secondarySortField!.rawValue)")
             drawSortArrow()
             applySort()
         }
@@ -80,6 +79,7 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
                 self.activityIndicator.stopAnimating()
                 print("error refreshing data")
         })
+        setupToolbar()
     }
     
     
@@ -289,8 +289,8 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
     
     @objc private func applyPrimarySort(sender: UIButton) {
         setPrimarySortField(sender)
-        applySort()
         drawSortArrow()
+        applySort()
     }
     
     private func setPrimarySortField(sender: UIButton) {
@@ -363,9 +363,13 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
     
     
     private func applySort() {
+        if primarySortField == nil {
+            return
+        }
+        
         let primarySortOrder = getPrimarySortOrder(primarySortField!)
         
-        filteredPokemons.sortInPlace() {
+        pokemons.sortInPlace() {
             let primarySortField1 = getSortFieldValue(primarySortField!, pokemon: $0)
             let primarySortField2 = getSortFieldValue(primarySortField!, pokemon: $1)
             if primarySortField1 < primarySortField2 {
@@ -440,6 +444,12 @@ class SearchablePokemonCollectionViewController: UIViewController, UISearchContr
             cell.topLabel.text = "\(pokemon.cp) cp"
         }
         
+        let green = CGFloat(min(pokemon.ivPct / 50.0, 1.0))
+        let red = CGFloat(min(-1.0 * pokemon.ivPct / 50.0 + 2.0, 1.0))
+
+        cell.layer.borderColor = UIColor(red: red, green: green, blue: 0.0, alpha: 0.75).CGColor
+        cell.layer.cornerRadius = 4
+        cell.layer.borderWidth = 1.5
 
         return cell
     }
